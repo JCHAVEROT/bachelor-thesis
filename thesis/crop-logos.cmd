@@ -1,9 +1,7 @@
 @echo off
 
-pdfcrop logos\tum-black.pdf logos\tum-black.pdf
-pdfcrop logos\faculty-black.pdf logos\faculty-black.pdf
+pdfcrop "./logos/epfl-red.pdf" "./logos/epfl-red.pdf"
 
-pdfcrop logos\tum-white.pdf logos\tum-white.pdf
-pdfcrop logos\faculty-white.pdf logos\faculty-white.pdf
+pdfcrop "./logos/epfl-black.pdf" "./logos/epfl-black.pdf"
 
 pause

@@ -6,7 +6,7 @@ command -v pdfcrop >/dev/null 2>&1 || {
   exit 1
 }
 
-LOGOS="tum-black faculty-black tum-white faculty-white"
+LOGOS="epfl-black epfl-red epfl-white"
 
 for logo in ${LOGOS}
 do
