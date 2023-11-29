@@ -1,0 +1,8 @@
+Module load gcc
+Module load py-torch py-torchvision
+Module load nvhpc cuda
+source opt/`hostname`/venv-gcc/bin/activate
+
+Conda activate cudatoolkit
+
+Filters ->> sampling ->> Poisson disk sampling
