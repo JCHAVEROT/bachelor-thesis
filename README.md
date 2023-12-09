@@ -4,7 +4,7 @@
 
 I am currently doing my bachelor thesis at EPF Lausanne in Switzerland under the supervision of Dr. Mathieu Salzmann.
 
-Assistant Name : Chen Zhao & Andrew Price
+Advisors: Chen Zhao & Andrew Price
 
 Dates: 19.09.2023 to 05.01.2024
 
