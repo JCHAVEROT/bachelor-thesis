@@ -1,0 +1,3 @@
+[submodule "Gen6D"]
+	path = Gen6D
+	url = https://github.com/liuyuan-pal/Gen6D/tree/main
