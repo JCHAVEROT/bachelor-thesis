@@ -1,14 +1,14 @@
 \begin{titlepage}
   \centering
 
-  \IfFileExists{logos/tum-\fg.pdf}{%
-    \includegraphics[height=20mm]{logos/tum-\fg.pdf}
+  \IfFileExists{logos/epfl-\fg.pdf}{%
+    \includegraphics[height=20mm]{logos/epfl-\fg.pdf}
   }{%
     \vspace*{20mm}
   }
 
   \vspace{5mm}
-  {\huge\MakeUppercase{School of \getSchool{} --- \getFaculty{}} \par}
+  {\huge\MakeUppercase{School of \getSchool{}} \par}
 
   \vspace{5mm}
   {\large\MakeUppercase{\getUniversity{}} \par}
@@ -30,8 +30,8 @@
     Submission Date: & \getSubmissionDate{} \\
   \end{tabular}
 
-  \IfFileExists{logos/faculty-\fg.pdf}{%
-    \vfill{}
-    \includegraphics[height=20mm]{logos/faculty-\fg.pdf}
-  }{}
+  %\IfFileExists{logos/epfl-\fg.pdf}{%
+   % \vfill{}
+   % \includegraphics[height=20mm]{logos/epfl-\fg.pdf}
+  %}{}
 \end{titlepage}
