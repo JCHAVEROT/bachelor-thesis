@@ -14,13 +14,14 @@
 \newcommand*{\getFaculty}{Computer Science}
 \newcommand*{\getDegree}{Computer Science}
 \newcommand*{\getSchool}{Computer and Communication Sciences}
-\newcommand*{\getTitle}{Computer Vision Laboratory Unseen Spacecraft Pose Estimation}
+\newcommand*{\getTitle}{Computer Vision Laboratory\\Unseen Spacecraft Pose Estimation}
 \newcommand*{\getTitleGer}{Baseline implementation of a generalizable 6DoF object pose estimator with target models included}
 \newcommand*{\getAuthor}{Jérémy Chaverot}
 \newcommand*{\getDoctype}{Bachelor's Thesis}
 \newcommand*{\getSupervisor}{Prof. Dr. Mathieu Salzmann}
 \newcommand*{\getAdvisor}{PhD. Andrew Price, PhD. Chen Zhao}
-\newcommand*{\getSubmissionDate}{Fall 2023}
+\newcommand*{\getSemester}{Fall 2023}
+\newcommand*{\getSubmissionDate}{05.01.24}
 \newcommand*{\getSubmissionLocation}{Lausanne, Switzerland}
 
 \begin{document}
@@ -43,6 +44,12 @@
 \mainmatter{}
 
 \input{chapters/01_introduction}
+\input{chapters/02_scientific_papers_review}
+\input{chapters/03_gen6d_formal_description}
+\input{chapters/04_implementation_of_the_model}
+\input{chapters/05_presentation_of_the_results}
+\input{chapters/06_ways_of_improvements}
+\input{chapters/07_conclusion}
 % TODO: add more chapters here
 
 \appendix{}
@@ -54,11 +61,15 @@
 	\itemsep-.25\baselineskip
 	\acro{TUM}[TUM]{Technical University of Munich}
 	\acro{EPFL}[EPFL]{École Polytechnique Fédérale de Lausanne}
+	\acro{DoF}[DoF]{Degrees of Freedom}
 	% TODO: add acronyms
 \end{acronym}
 
-\listoffigures{}
-\listoftables{}
+\cleardoublepage{}
+
+%\listoffigures{}
+%\listoftables{}
+\input{pages/appendix}
 \microtypesetup{protrusion=true}
 \printbibliography{}
 

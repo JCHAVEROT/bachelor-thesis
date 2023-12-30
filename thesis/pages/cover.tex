@@ -16,16 +16,16 @@
   }
 
   \vspace{5mm}
-  {\huge\MakeUppercase{School of \getSchool{}} \par}
+  {\rmfamily\huge\MakeUppercase{School of \getSchool{}} \par}
 
   \vspace{5mm}
-  {\large\MakeUppercase{\getUniversity{}} \par}
+  {\rmfamily\large\MakeUppercase{\getUniversity{}} \par}
 
   \vspace{30mm}
   {\huge\bfseries \getTitle{} \par}
   
   \vspace{10mm}
-  {\Large \foreignlanguage{ngerman}{\getTitleGer{}} \par}
+  {\Large\foreignlanguage{ngerman}{\getTitleGer{}} \par}
   
   \vspace{40mm}
   {\large \getDoctype{} in \getDegree{} \par}
@@ -36,7 +36,7 @@
     Author:          & \getAuthor{}         \\
     Supervisor:      & \getSupervisor{}     \\
     Advisor:         & \getAdvisor{}        \\
-    Semester:        & \getSubmissionDate{} \\
+    Semester:        & \getSemester{}       \\
   \end{tabular}
 
   \IfFileExists{logos/faculty-\fg.pdf}{%
