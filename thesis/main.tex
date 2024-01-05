@@ -15,7 +15,7 @@
 \newcommand*{\getDegree}{Computer Science}
 \newcommand*{\getSchool}{Computer and Communication Sciences}
 \newcommand*{\getTitle}{Computer Vision Laboratory\\Unseen Spacecraft Pose Estimation}
-\newcommand*{\getTitleGer}{Baseline implementation of a generalizable 6DoF object pose estimator with target models included}
+\newcommand*{\getTitleGer}{Baseline solution by implementing a machine learning framework with target models included}
 \newcommand*{\getAuthor}{Jérémy Chaverot}
 \newcommand*{\getDoctype}{Bachelor's Thesis}
 \newcommand*{\getSupervisor}{Prof. Dr. Mathieu Salzmann}
@@ -33,6 +33,8 @@
 
 \frontmatter{}
 
+\input{pages/summary}
+\iffalse
 %\input{pages/title}
 \input{pages/disclaimer}
 \input{pages/acknowledgments}
@@ -53,7 +55,7 @@
 % TODO: add more chapters here
 
 \appendix{}
-
+\fi
 \microtypesetup{protrusion=false}
 
 \addchap{Abbreviations}
@@ -61,16 +63,20 @@
 	\itemsep-.25\baselineskip
 	\acro{TUM}[TUM]{Technical University of Munich}
 	\acro{EPFL}[EPFL]{École Polytechnique Fédérale de Lausanne}
+	\acro{ESA}[ESA]{European Space Agency}
 	\acro{DoF}[DoF]{Degrees of Freedom}
+	\acro{CVLab}[CVLab]{Computer Vision Laboratory}
+	\acro{SFM}[SFM]{Structure From Motion}
+	\acro{ML}[ML]{Machine Learning}
 	% TODO: add acronyms
 \end{acronym}
 
-\cleardoublepage{}
+%\cleardoublepage{}
 
 %\listoffigures{}
 %\listoftables{}
-\input{pages/appendix}
+%\input{pages/appendix}
 \microtypesetup{protrusion=true}
-\printbibliography{}
 
+\printbibliography{}
 \end{document}
