@@ -33,8 +33,7 @@
 
 \frontmatter{}
 
-\input{pages/summary}
-\iffalse
+%\input{pages/summary}
 %\input{pages/title}
 \input{pages/disclaimer}
 \input{pages/acknowledgments}
@@ -54,8 +53,10 @@
 \input{chapters/07_conclusion}
 % TODO: add more chapters here
 
-\appendix{}
-\fi
+\frontmatter{}
+\setcounter{page}{4}
+%\appendix{}
+
 \microtypesetup{protrusion=false}
 
 \addchap{Abbreviations}
@@ -71,11 +72,11 @@
 	% TODO: add acronyms
 \end{acronym}
 
-%\cleardoublepage{}
+\cleardoublepage{}
 
 %\listoffigures{}
 %\listoftables{}
-%\input{pages/appendix}
+\input{pages/appendix}
 \microtypesetup{protrusion=true}
 
 \printbibliography{}
