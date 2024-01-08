@@ -10,7 +10,7 @@ import sys
 
 def inverse_masks_in_folder(folder_path):
     for filename in os.listdir(folder_path):
-        if filename.endswith(".png"):
+        if filename.endswith(".png") and not filename.startswith('._'):
             mask_path = os.path.join(folder_path, filename)
             try:
                 # Read the mask image
