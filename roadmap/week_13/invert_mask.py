@@ -1,7 +1,7 @@
 """
 Author:      Jérémy Chaverot
-Date:        January 01, 2024
-Description: Invert the masks in a given folder.
+Date:        December 10, 2023
+Description: Invert the masks from a given folder.
 """
 
 import cv2
@@ -9,7 +9,9 @@ import os
 import sys
 
 def inverse_masks_in_folder(folder_path):
+	# Iterate through the list of files at the specified path
     for filename in os.listdir(folder_path):
+    	# Filter to include only png image files and exclude MacOS temporary files
         if filename.endswith(".png") and not filename.startswith('._'):
             mask_path = os.path.join(folder_path, filename)
             try:
@@ -36,8 +38,10 @@ def inverse_masks_in_folder(folder_path):
                 print(f"Error processing {mask_path}: {e}")
 
 if __name__ == "__main__":
+
+	# Check if the correct number of arguments is provided
     if len(sys.argv) != 2:
-        print("Usage: python script.py <folder_path>")
+        print("Usage: python invert_mask.py <folder_path>")
         sys.exit(1)
 
     folder_path = sys.argv[1]
