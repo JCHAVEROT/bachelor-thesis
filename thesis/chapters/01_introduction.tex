@@ -7,7 +7,7 @@ Test ref to Listing~\ref{lst:1}. Test ref to Listing~\ref{lst:3}
 \subsection{The settings}
 \subsection{The goal}
 \section{The work environment: Scitas Izar}
-
+Test to refer to the video from 3B1B: \cite{3b1b-1}.
 \begin{lstlisting}[style=bashstyle, caption={Bash script \texttt{execute.sh} to run a machine learning model on Scitas Izar EPFL. While the overall structure remains consistent, this script is specific to Gen6D's architecture, further discussed later.}]
 #!/bin/bash
 #SBATCH --chdir /scratch/izar/jchavero
@@ -24,7 +24,7 @@ echo STARTING AT `date`
 echo "Loading modules"
 module load gcc openmpi py-torch py-torchvision cuda
 
-echo "Launching the Virtual Environment"
+echo "Launching the virtual environment"
 source ~/opt/izar1/venv-gcc/bin/activate
 
 echo "Navigating to the directory and executing the task"
@@ -32,4 +32,9 @@ cd ~/Gen6D
 python eval.py --cfg configs/gen6d_pretrain.yaml --object_name spacecraft/hubble
 
 echo FINISHED AT `date`
+\end{lstlisting}
+
+\noindent Then to run the script we use the following command:
+\begin{lstlisting}[style=bashstyle, caption=Linux command to run the bash script.]
+	$ sbatch execute.sh
 \end{lstlisting}
