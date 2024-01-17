@@ -14,7 +14,7 @@ def resize_images(folder_path, resize_factor):
             img_path = os.path.join(folder_path, filename)
             with Image.open(img_path) as img:
                 # Calculate new size
-                new_size = tuple([int(dim / resize_factor) for dim in img.size])
+                new_size = tuple([int(dim * resize_factor) for dim in img.size])
                 # Resize the image
                 resized_img = img.resize(new_size, Image.ANTIALIAS)
                 # Save the resized image with a different name temporarily
