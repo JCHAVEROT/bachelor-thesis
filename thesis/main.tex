@@ -16,10 +16,10 @@
 \newcommand*{\getSchool}{Computer and Communication Sciences}
 \newcommand*{\getTitle}{Computer Vision Laboratory\\Unseen Spacecraft Pose Estimation}
 \newcommand*{\getTitleGer}{Baseline solution by implementing a machine learning framework with target models included}
-\newcommand*{\getAuthor}{Jérémy Chaverot}
+\newcommand*{\getAuthor}{\textsc{Jérémy Chaverot}}
 \newcommand*{\getDoctype}{Bachelor's Thesis}
-\newcommand*{\getSupervisor}{Prof. Dr. Mathieu Salzmann}
-\newcommand*{\getAdvisor}{Dr. Andrew Price, PhD. Chen Zhao}
+\newcommand*{\getSupervisor}{Dr. \textsc{Mathieu Salzmann}}
+\newcommand*{\getAdvisor}{Dr. \textsc{Andrew Price}, PhD. \textsc{Chen Zhao}}
 \newcommand*{\getSemester}{Fall 2023}
 \newcommand*{\getSubmissionDate}{05.01.24}
 \newcommand*{\getSubmissionLocation}{Lausanne, Switzerland}
@@ -33,9 +33,9 @@
 
 \frontmatter{}
 
-\input{pages/summary}
+%\input{pages/summary}
 %\input{pages/title}
-%\input{pages/disclaimer}
+\input{pages/disclaimer}
 \input{pages/acknowledgments}
 \input{pages/abstract}
 \microtypesetup{protrusion=false}
@@ -45,17 +45,12 @@
 \mainmatter{}
 
 \input{chapters/01_introduction}
-\input{chapters/02_scientific_papers_review}
-\input{chapters/03_gen6d_formal_description}
-\input{chapters/04_implementation_of_the_model}
-\input{chapters/05_presentation_of_the_results}
-\input{chapters/06_ways_of_improvements}
-\input{chapters/07_conclusion}
+\input{chapters/02_gen6d_formal_description}
+\input{chapters/03_implementation_of_the_model}
+\input{chapters/04_presentation_of_the_results}
+\input{chapters/05_ways_of_improvements}
+\input{chapters/06_conclusion}
 % TODO: add more chapters here
-
-\frontmatter{}
-\setcounter{page}{4}
-%\appendix{}
 
 \microtypesetup{protrusion=false}
 
@@ -79,9 +74,11 @@
 %\listoffigures{}
 %\listoftables{}
 
+\appendix{}
 \renewcommand{\thelstlisting}{A.\arabic{lstlisting}}
 \setcounter{lstlisting}{0} % Reset the counter to start from 1
-\input{pages/appendix}
+\input{appendix/A_python_scripts}
+\input{appendix/B_scitas_izar_setup_tutorial}
 \microtypesetup{protrusion=true}
 
 \printbibliography{}

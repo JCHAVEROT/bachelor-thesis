@@ -1,0 +1,115 @@
+% !TeX root = ../main.tex
+% Add the above to each chapter to make compiling the PDF easier in some editors.
+
+\chapter{Implementation of the model}\label{chapter:implementation_of_the_model}
+
+\section{Data Loader}
+abstract base classes (ABC)
+each and every abstract method
+
+\section{From Quaternions to Rotation Matrices}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\small\textsc{3.2. From Quaternions to Rotation Matrices}}
+\renewcommand{\footrulewidth}{0.4pt} % adds a line above the footer
+\fancyfoot[C]{\small\thepage} % center the page number in the footer
+
+In Gen6D, the model represents the ground truth and estimated poses using the format ${\bm{\mathrm{P}}}=(\bm{\mathrm{R}},\,\bm{\mathrm{t}})$. Here, $\bm{\mathrm{R}}$ denotes the rotation matrix and $\bm{\mathrm{t}}$ is the translation vector.
+The thing is, in the \textsc{SpaceCraft} dataset, the poses have the format ${\bm{\mathrm{P}}}=(\underline{\bm{\mathrm{q}}},\,\bm{\mathrm{t}})$, where $\underline{\bm{\mathrm{q}}}$ is a \textit{quaternion}. We use quaternions for three-dimensional rotation calculations because they offer several benefits over rotation matrices. Notably, quaternions are more compact, requiring only four elements to be stored compared to nine for a matrix. Additionally, they are more efficient when composing rotations thanks to their algebraic properties.
+
+Despite the benefits of quaternions mentioned earlier, other datasets frequently represent poses using a combination of rotation matrices and translation vectors. Therefore, to align with Gen6D's pose format, this section will focus on converting quaternions into rotation matrices.
+
+\bigbreak 
+
+Quaternions were first introduced by the Irish mathematician W. R. Hamilton in 1843 as an extension of the complex numbers. We give the definition of a \textit{quaternion}: it is the sum of a scalar $\mathrm{q}_0$ and a vector $\bm{\mathrm{q}}=(\mathrm{q}_1, \mathrm{q}_2, \mathrm{q}_3)$, that is,
+\begin{center}
+	$\underline{\bm{\mathrm{q}}} \stackrel{\text{def.}}{=} \mathrm{q}_0 + \bm{\mathrm{q}} = \mathrm{q}_0 + \mathrm{q}_1\bm{i} + \mathrm{q}_2\bm{j} + \mathrm{q}_3\bm{k}$.
+\end{center}
+
+\noindent In the above, $\bm{i}$, $\bm{j}$ and $\bm{k}$ denote the three unit vectors of the canonical basis for 
+the set of all ordered triples of real numbers $\mathbb{R}^3$. The set of quaternions is denoted by the 4-space $\mathbb{H}$.
+
+\bigbreak 
+The quaternion addition is component-wise. Regarding the multiplication of two quaternions, it is essential to first outline the foundational rule established by \mbox{Hamilton}:
+\begin{align*}
+	\bm{i}^2 &= \bm{j}^2 = \bm{k}^2 = \bm{ijk}= -1.
+\end{align*}
+
+\noindent We derive the following multiplication table:
+
+\begin{center}
+	\begin{tabular}{|c||c|c|c|c|}
+		\hline
+		\rowcolor{gray!25}
+		\cellcolor{gray!60}$\times$ & 1 & i & j & k \\
+		\hline\hline
+		\cellcolor{gray!25}1 & 1 & i & j & k \\
+		\hline
+		\cellcolor{gray!25}i & i & -1 & k & -j \\
+		\hline
+		\cellcolor{gray!25}j & j & -k & -1 & i \\
+		\hline
+		\cellcolor{gray!25}k & k & j & -i & -1 \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\bigbreak 
+
+\noindent Let $(\underline{\bm{\mathrm{p}}}, \underline{\bm{\mathrm{q}}})\in\mathbb{H}^2$, we are now able to present the multiplication of $\underline{\bm{\mathrm{p}}}$ and $\underline{\bm{\mathrm{q}}}$:
+\begin{align*}
+    \underline{\bm{\mathrm{p}}}\underline{\bm{\mathrm{q}}} &= \underbrace{\mathrm{p}_0\mathrm{q}_0 - \bm{\mathrm{p}} \cdot \bm{\mathrm{q}}}_{\text{scalar part}} + \underbrace{\mathrm{p}_0\bm{\mathrm{q}} + \mathrm{q}_0\bm{\mathrm{p}} + \bm{\mathrm{p}} \times \bm{\mathrm{q}}}_{\text{vector part}}.
+\end{align*}
+
+\noindent In the preceding, we recall that the function $\mathbb{R}^3\times\mathbb{R}^3\rightarrow\mathbb{R}$ : $(\bm{\mathrm{p}},\bm{\mathrm{q}})\mapsto\bm{\mathrm{p}}\cdot\bm{\mathrm{q}}\stackrel{\text{def.}}{=}\bm{\mathrm{p}}^\intercal\bm{\mathrm{q}}$ is the \textit{dot product}, and the function 
+\begin{align*}
+	\mathbb{R}^3\times\mathbb{R}^3\rightarrow\mathbb{R}^3 : (\bm{\mathrm{p}},\bm{\mathrm{q}})\mapsto\bm{\mathrm{p}}\times\bm{\mathrm{q}}\stackrel{\text{def.}}{=}\begin{vmatrix} \bm{i} & \bm{j} & \bm{k} \\ \mathrm{p}_1 & \mathrm{p}_2 & \mathrm{p}_3 \\
+		\mathrm{q}_1 & \mathrm{q}_2 & \mathrm{q}_3 \end{vmatrix}
+\end{align*}
+
+\noindent is the \textit{cross product}.
+\bigbreak 
+Several additional definitions are essential before we can begin the conversion of quaternions to rotation matrices. 
+
+
+\noindent Let $\underline{\bm{\mathrm{q}}}=\mathrm{q}_0 + \bm{\mathrm{q}}$ be a quaternion. The \textit{complex conjugate} of $\underline{\bm{\mathrm{q}}}$, denoted by $\underline{\bm{\mathrm{q}}}^\star$, is given by the map
+\begin{align*}
+	\mathbb{H}\rightarrow\mathbb{H}:\underline{\bm{\mathrm{q}}}\mapsto\underline{\bm{\mathrm{q}}}^\star\stackrel{\text{def.}}{=}\mathrm{q}_0 - \bm{\mathrm{q}}.
+\end{align*} 
+
+\noindent The \textit{norm} of a quaternion $\underline{\bm{\mathrm{q}}}$, denoted $|\underline{\bm{\mathrm{q}}}|$, is the distance obtained from the map 
+\begin{align*}
+	\mathbb{H}\rightarrow\mathbb{R}:\underline{\bm{\mathrm{q}}}\mapsto|\underline{\bm{\mathrm{q}}}|\stackrel{\text{def.}}{=}\sqrt{\underline{\bm{\mathrm{q}}}^\star\underline{\bm{\mathrm{q}}}}.
+\end{align*} 
+Note that a quaternion whose norm is 1 is referred to as a \textit{unit quaternion}. The \textit{reciprocal} of a quaternion is defined as the map
+\begin{align*}
+	\mathbb{H}\rightarrow\mathbb{H}:\underline{\bm{\mathrm{q}}}\mapsto\underline{\bm{\mathrm{q}}}^{-1}\stackrel{\text{def.}}{=}\frac{\underline{\bm{\mathrm{q}}}^\star}{|\underline{\bm{\mathrm{q}}}|^2}.
+\end{align*} 
+We observe that if $\underline{\bm{\mathrm{q}}}$ is a unit quaternion, we simply have $\underline{\bm{\mathrm{q}}}^{-1}=\underline{\bm{\mathrm{q}}}^\star$. Furthermore, the subsequent proposition is accepted: if $\underline{\bm{\mathrm{q}}}$ is a unit quaternion, there exists a unique $\theta\in[0,2\pi]$ such that
+\begin{align*}
+	\underline{\bm{\mathrm{q}}} = \mathrm{q}_0 + \bm{\mathrm{q}}=\cos\frac{\theta}{2}+\bm{\mathrm{u}}\,\sin\frac{\theta}{2}\,,
+\end{align*}
+where the unit vector $\bm{\mathrm{u}}$ is defined as $\bm{\mathrm{u}}\stackrel{\text{def.}}{=}\frac{\bm{\mathrm{q}}}{|\bm{\mathrm{q}}|}$.
+
+\setlength{\belowdisplayskip}{0.15cm}
+
+\paragraph{Quaternion Rotation Operator} Let $\underline{\bm{\mathrm{q}}}\in\mathbb{H}$ be a unit quaternion, and let $\bm{\mathrm{v}}\in\mathbb{R}^3$ be a vector. The effect of the operator 
+\begin{align*}
+	L_{\underline{\bm{\mathrm{q}}}}(\bm{\mathrm{v}}) \stackrel{\text{def.}}{=} \underline{\bm{\mathrm{q}}}\bm{\mathrm{v}}\underline{\bm{\mathrm{q}}}^\star
+\end{align*}
+on $\bm{\mathrm{v}}$ is equivalent to a rotation of the vector through an angle $\theta$ about the axis of rotation $\bm{\mathrm{u}}$
+.
+\setlength{\belowdisplayskip}{0.3cm}
+
+\bigskip At last, we can proceed with our conversion task: our aim is to find a matrix $\bm{\mathrm{R}}$ such that
+\begin{align*}
+\left\{
+    \begin{aligned}
+    	L_{\bm{\mathrm{R}}}(\bm{\mathrm{v}}) &\stackrel{\text{def.}}{=} \bm{\mathrm{R}}\bm{\mathrm{v}} \\
+        L_{\bm{\mathrm{R}}}(\bm{\mathrm{v}}) &= L_{\underline{\bm{\mathrm{q}}}}(\bm{\mathrm{v}}),
+    \end{aligned}
+\right.
+\end{align*}
+
+and we wish to obtain
+ an expression for $\bm{\mathrm{R}}$ from $\underline{\bm{\mathrm{q}}}$, utilizing principles of linear algebra and vector calculus.

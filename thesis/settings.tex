@@ -3,10 +3,13 @@
 \usepackage[utf8]{inputenc}
 \usepackage[OT1]{fontenc}
 \renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
-\usepackage{amsmath,amsfonts}
+\usepackage{amsmath,amsfonts,amssymb}
 \usepackage[sc]{mathpazo}
 \usepackage[ngerman,american]{babel}
 \usepackage[autostyle]{csquotes}
+\usepackage{fancyhdr}
+\usepackage{stackengine}
+\def\delequal{\mathrel{\ensurestackMath{\stackon[1pt]{=}{\scriptscriptstyle\Delta}}}}
 \usepackage[
   backend=biber,
   url=false,
@@ -40,22 +43,25 @@
 \usepackage{geometry}
 \geometry{hmargin=4.5cm, vmargin=4cm}
 \captionsetup{font=small}
+\captionsetup[figure]{labelformat=simple}
 
 \usepackage{color} % For syntax highlighting
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codeblue}{rgb}{0.054,0.432,0.817}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{backcolour}{rgb}{0.901,0.901,0.901}
+\newcommand{\verytiny}{\fontsize{5pt}{6pt}\selectfont}
 
 \lstdefinestyle{pythonstyle}{
 	language=python,
 	rulecolor=\color{black},
     backgroundcolor=\color{backcolour},   
     commentstyle=\color{codegreen},
-    keywordstyle=\color{magenta},
-    numberstyle=\tiny\color{codegray},
-    stringstyle=\color{codepurple},
-    basicstyle=\small\ttfamily,
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codeblue},
+    stringstyle=\color{magenta},
+    basicstyle=\scriptsize\ttfamily,
     breakatwhitespace=false,         
     breaklines=true,                 
     captionpos=b,                    
@@ -72,10 +78,11 @@
 \lstdefinestyle{bashstyle}{
 		language=bash,
 		rulecolor=\color{black},
-        basicstyle=\small\ttfamily,
-        keywordstyle=\color{blue},
+		backgroundcolor=\color{backcolour},
+        basicstyle=\scriptsize\ttfamily,
+        keywordstyle=\color{codeblue},
         commentstyle=\color{gray},
-        stringstyle=\color{red},
+        stringstyle=\color{magenta},
         showstringspaces=false,
         breaklines=true,
         frame=single
