@@ -29,7 +29,7 @@ Despite the benefits of quaternions mentioned earlier, other datasets frequently
 
 \bigbreak 
 
-Quaternions were first introduced by the Irish mathematician W. R. Hamilton in 1843 as an extension of the complex numbers. We give the definition of a \textit{quaternion}: it is the sum of a scalar $\mathrm{q}_0$ and a vector $\bm{\mathrm{q}}=(\mathrm{q}_1, \mathrm{q}_2, \mathrm{q}_3)$, that is,
+Quaternions were first introduced by the Irish mathematician W. R. Hamilton in 1843 as an extension of the complex numbers. In the first place, we provide the definition of a \textit{quaternion}: it is the sum of a scalar $\mathrm{q}_0$ and a vector $\bm{\mathrm{q}}=(\mathrm{q}_1, \mathrm{q}_2, \mathrm{q}_3)$, that is,
 \begin{center}
 	$\underline{\bm{\mathrm{q}}} \stackrel{\text{def.}}{=} \mathrm{q}_0 + \bm{\mathrm{q}} = \mathrm{q}_0 + \mathrm{q}_1\bm{i} + \mathrm{q}_2\bm{j} + \mathrm{q}_3\bm{k}$.
 \end{center}
@@ -38,7 +38,7 @@ Quaternions were first introduced by the Irish mathematician W. R. Hamilton in 1
 the set of all ordered triples of real numbers $\mathbb{R}^3$. The set of quaternions is denoted by the 4-space $\mathbb{H}$.
 
 \bigbreak 
-The quaternion addition is component-wise. Regarding the multiplication of two quaternions, it is essential to first outline the foundational rule established by \mbox{Hamilton}:
+The quaternion addition is component-wise. Regarding the product of two quaternions, it is essential to first outline the foundational rule established by \mbox{Hamilton}:
 \begin{align*}
 	\bm{i}^2 &= \bm{j}^2 = \bm{k}^2 = \bm{ijk}= -1.
 \end{align*}
@@ -46,20 +46,22 @@ The quaternion addition is component-wise. Regarding the multiplication of two q
 \noindent We derive the following multiplication table:
 
 \begin{center}
-	\begin{tabular}{|c||c|c|c|c|}
-		\hline
-		\rowcolor{gray!25}
-		\cellcolor{gray!60}$\times$ & 1 & i & j & k \\
-		\hline\hline
-		\cellcolor{gray!25}1 & 1 & i & j & k \\
-		\hline
-		\cellcolor{gray!25}i & i & -1 & k & -j \\
-		\hline
-		\cellcolor{gray!25}j & j & -k & -1 & i \\
-		\hline
-		\cellcolor{gray!25}k & k & j & -i & -1 \\
-		\hline
-	\end{tabular}
+\setlength{\arrayrulewidth}{1pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|m{1.5em}||m{1.5em}|m{1.5em}|m{1.5em}|m{1.5em}|}
+    \hline
+    \rowcolor{gray!25}
+    \cellcolor{gray!60}$\times$ & \centering $1$ & \centering $\bm{i}$ & \centering $\bm{j}$ & \centering $\bm{k}$ \tabularnewline
+    \hline\hline
+    \cellcolor{gray!25}$1$ & \centering $1$ & \centering $\bm{i}$ & \centering $\bm{j}$ & \centering $\bm{k}$ \tabularnewline
+    \hline
+    \cellcolor{gray!25}$\bm{i}$ & \centering $\bm{i}$ & \centering $-1$ & \centering $\bm{k}$ & \centering $-\bm{j}$ \tabularnewline
+    \hline
+    \cellcolor{gray!25}$\bm{j}$ & \centering $\bm{j}$ & \centering $-\bm{k}$ & \centering $-1$ & \centering $\bm{i}$ \tabularnewline
+    \hline
+    \cellcolor{gray!25}$\bm{k}$ & \centering $\bm{k}$ & \centering $\bm{j}$ & \centering $-\bm{i}$ & \centering $-1$ \tabularnewline
+    \hline
+\end{tabular}
 \end{center}
 
 \bigbreak 
@@ -87,7 +89,7 @@ Several additional definitions are essential before we can begin the conversion 
 
 \noindent The \textit{norm} of a quaternion $\underline{\bm{\mathrm{q}}}$, denoted $|\underline{\bm{\mathrm{q}}}|$, is the distance obtained from the map 
 \begin{align*}
-	\mathbb{H}\rightarrow\mathbb{R}:\underline{\bm{\mathrm{q}}}\mapsto|\underline{\bm{\mathrm{q}}}|\stackrel{\text{def.}}{=}\sqrt{\underline{\bm{\mathrm{q}}}^\star\underline{\bm{\mathrm{q}}}}.
+	\mathbb{H}\rightarrow\mathbb{R}^+:\underline{\bm{\mathrm{q}}}\mapsto|\underline{\bm{\mathrm{q}}}|\stackrel{\text{def.}}{=}\sqrt{\underline{\bm{\mathrm{q}}}^\star\underline{\bm{\mathrm{q}}}}.
 \end{align*} 
 Note that a quaternion whose norm is 1 is referred to as a \textit{unit quaternion}. The \textit{reciprocal} of a quaternion is defined as the map
 \begin{align*}
@@ -109,7 +111,7 @@ on $\bm{\mathrm{v}}$ is equivalent to a rotation of the vector through an angle 
 .
 \setlength{\belowdisplayskip}{0.3cm}
 
-\bigskip At last, we can proceed with our conversion task: our aim is to find a matrix $\bm{\mathrm{R}}$ such that
+\bigskip At last, we can proceed with our conversion task: our aim is to find a $3\times3$ rotation matrix $\bm{\mathrm{R}}$, such that
 \begin{align*}
 \left\{
     \begin{aligned}
@@ -119,6 +121,5 @@ on $\bm{\mathrm{v}}$ is equivalent to a rotation of the vector through an angle 
 \right.
 \end{align*}
 
-and we wish to obtain
- an expression for $\bm{\mathrm{R}}$ from $\underline{\bm{\mathrm{q}}}$, utilizing principles of linear algebra and vector calculus.
+which means we wish to obtain an expression for $\bm{\mathrm{R}}$ from $\underline{\bm{\mathrm{q}}}$, utilizing principles of linear algebra and vector calculus.
 \end{document}

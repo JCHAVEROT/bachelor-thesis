@@ -38,20 +38,22 @@ The quaternion addition is component-wise. Regarding the multiplication of two q
 \noindent We derive the following multiplication table:
 
 \begin{center}
-	\begin{tabular}{|c||c|c|c|c|}
-		\hline
-		\rowcolor{gray!25}
-		\cellcolor{gray!60}$\times$ & 1 & i & j & k \\
-		\hline\hline
-		\cellcolor{gray!25}1 & 1 & i & j & k \\
-		\hline
-		\cellcolor{gray!25}i & i & -1 & k & -j \\
-		\hline
-		\cellcolor{gray!25}j & j & -k & -1 & i \\
-		\hline
-		\cellcolor{gray!25}k & k & j & -i & -1 \\
-		\hline
-	\end{tabular}
+\setlength{\arrayrulewidth}{1pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|m{1.5em}||m{1.5em}|m{1.5em}|m{1.5em}|m{1.5em}|}
+    \hline
+    \rowcolor{gray!25}
+    \cellcolor{gray!60}$\times$ & \centering $1$ & \centering $\bm{i}$ & \centering $\bm{j}$ & \centering $\bm{k}$ \tabularnewline
+    \hline\hline
+    \cellcolor{gray!25}$1$ & \centering $1$ & \centering $\bm{i}$ & \centering $\bm{j}$ & \centering $\bm{k}$ \tabularnewline
+    \hline
+    \cellcolor{gray!25}$\bm{i}$ & \centering $\bm{i}$ & \centering $-1$ & \centering $\bm{k}$ & \centering $-\bm{j}$ \tabularnewline
+    \hline
+    \cellcolor{gray!25}$\bm{j}$ & \centering $\bm{j}$ & \centering $-\bm{k}$ & \centering $-1$ & \centering $\bm{i}$ \tabularnewline
+    \hline
+    \cellcolor{gray!25}$\bm{k}$ & \centering $\bm{k}$ & \centering $\bm{j}$ & \centering $-\bm{i}$ & \centering $-1$ \tabularnewline
+    \hline
+\end{tabular}
 \end{center}
 
 \bigbreak 
@@ -79,7 +81,7 @@ Several additional definitions are essential before we can begin the conversion 
 
 \noindent The \textit{norm} of a quaternion $\underline{\bm{\mathrm{q}}}$, denoted $|\underline{\bm{\mathrm{q}}}|$, is the distance obtained from the map 
 \begin{align*}
-	\mathbb{H}\rightarrow\mathbb{R}:\underline{\bm{\mathrm{q}}}\mapsto|\underline{\bm{\mathrm{q}}}|\stackrel{\text{def.}}{=}\sqrt{\underline{\bm{\mathrm{q}}}^\star\underline{\bm{\mathrm{q}}}}.
+	\mathbb{H}\rightarrow\mathbb{R}^+:\underline{\bm{\mathrm{q}}}\mapsto|\underline{\bm{\mathrm{q}}}|\stackrel{\text{def.}}{=}\sqrt{\underline{\bm{\mathrm{q}}}^\star\underline{\bm{\mathrm{q}}}}.
 \end{align*} 
 Note that a quaternion whose norm is 1 is referred to as a \textit{unit quaternion}. The \textit{reciprocal} of a quaternion is defined as the map
 \begin{align*}
@@ -97,8 +99,7 @@ where the unit vector $\bm{\mathrm{u}}$ is defined as $\bm{\mathrm{u}}\stackrel{
 \begin{align*}
 	L_{\underline{\bm{\mathrm{q}}}}(\bm{\mathrm{v}}) \stackrel{\text{def.}}{=} \underline{\bm{\mathrm{q}}}\bm{\mathrm{v}}\underline{\bm{\mathrm{q}}}^\star
 \end{align*}
-on $\bm{\mathrm{v}}$ is equivalent to a rotation of the vector through an angle $\theta$ about the axis of rotation $\bm{\mathrm{u}}$
-.
+on $\bm{\mathrm{v}}$ is equivalent to a rotation of the vector through an angle $\theta$ about the axis of rotation $\bm{\mathrm{u}}$.
 \setlength{\belowdisplayskip}{0.3cm}
 
 \bigskip At last, we can proceed with our conversion task: our aim is to find a matrix $\bm{\mathrm{R}}$ such that
