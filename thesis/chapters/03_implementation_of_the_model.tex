@@ -17,7 +17,7 @@ each and every abstract method
 In Gen6D, the model represents the ground truth and estimated poses using the format ${\bm{\mathrm{P}}}=(\bm{\mathrm{R}},\,\bm{\mathrm{t}})$. Here, $\bm{\mathrm{R}}$ denotes the rotation matrix and $\bm{\mathrm{t}}$ is the translation vector.
 The thing is, in the \textsc{SpaceCraft} dataset, the poses have the format ${\bm{\mathrm{P}}}=(\underline{\bm{\mathrm{q}}},\,\bm{\mathrm{t}})$, where $\underline{\bm{\mathrm{q}}}$ is a \textit{quaternion}. We use quaternions for three-dimensional rotation calculations because they offer several benefits over rotation matrices. Notably, quaternions are more compact, requiring only four elements to be stored compared to nine for a matrix. Additionally, they are more efficient when composing rotations thanks to their algebraic properties.
 
-Despite the benefits of quaternions mentioned earlier, other datasets frequently represent poses using a combination of rotation matrices and translation vectors. Therefore, to align with Gen6D's pose format, this section will focus on converting quaternions into rotation matrices.
+Despite the benefits of quaternions mentioned earlier, other datasets frequently represent poses using a combination of rotation matrices and translation vectors. Therefore, to align with Gen6D's pose format, this section will focus on converting quaternions into rotation matrices \cite{jia2022quaternions}.
 
 \bigbreak 
 
@@ -70,7 +70,7 @@ The quaternion addition is component-wise. Regarding the product of two quaterni
 		=[\bm{\mathrm{p}}]_{_{_\times}}\bm{\mathrm{q}}
 \end{align*}
 
-\noindent is the \textit{cross product}, and $[\bm{\mathrm{p}}]_{_{_\times}}$denotes the transformation matrix that when multiplied from the right with a vector $\bm{\mathrm{q}}$ gives $\bm{\mathrm{p}}\times\bm{\mathrm{q}}$.
+\noindent is the \textit{cross product}, and the operator $[\bm{\mathrm{p}}]_{_{_\times}}$yields the transformation matrix that when multiplied from the right with a vector $\bm{\mathrm{q}}$ gives $\bm{\mathrm{p}}\times\bm{\mathrm{q}}$.
 \bigbreak 
 Several additional definitions are essential before we can begin the conversion of quaternions to rotation matrices. 
 
