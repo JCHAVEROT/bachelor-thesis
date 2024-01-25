@@ -1,8 +1,8 @@
 """
 Author:      Jérémy Chaverot
 Date:        November 20, 2023
-Description: Transform a .txt file with quaternions and the translation vector into multiple .npy files containing the
-             rotation matrix augmented with the translation vector.
+Description: Transform a txt file with quaternions and the translation vector into multiple npy files containing the
+             rotation matrix concatenated with the translation vector.
 """
 
 import numpy as np
@@ -15,47 +15,42 @@ def quaternion_to_matrix(Q, translation):
         Covert a quaternion and translation into a full three-dimensional augmented rotation matrix.
 
         Input
-        :param Q: A 4 element array representing the quaternion (qw, qx, qy, qz).
+        :param Q: A 4 element array representing the quaternion (q0, q1, q2, q3).
         :param translation: A 3 element array representing the translation (x, y, z).
 
         Output
-        :return: A 3x4 element matrix representing the full 3D rotation matrix with
-                 translation. This rotation matrix converts a point in the local
-                 reference frame to a point in the global reference frame.
+        :return: A 3x4 element matrix representing the 3D rotation matrix concatenated with the translation vector.
     """
 
-    # Extract the values from Q
-    qw = Q[0]
-    qx = Q[1]
-    qy = Q[2]
-    qz = Q[3]
+    # Extract the values from arguments
+    q0 = Q[0]
+    q1 = Q[1]
+    q2 = Q[2]
+    q3 = Q[3]
 
-    # Extract the values from the translation vector
     x = translation[0]
     y = translation[1]
     z = translation[2]
 
-    # First row of the rotation matrix
-    r00 = 2 * (qw * qw + qx * qx) - 1
-    r01 = 2 * (qx * qy - qw * qz)
-    r02 = 2 * (qx * qz + qw * qy)
+    # Compute the rotation matrix
+    r00 = 2 * (q0 * q0 + q1 * q1) - 1
+    r01 = 2 * (q1 * q2 - q0 * q3)
+    r02 = 2 * (q1 * q3 + q0 * q2)
 
-    # Second row of the rotation matrix
-    r10 = 2 * (qx * qy + qw * qz)
-    r11 = 2 * (qw * qw + qy * qy) - 1
-    r12 = 2 * (qy * qz - qw * qx)
+    r10 = 2 * (q1 * q2 + q0 * q3)
+    r11 = 2 * (q0 * q0 + q2 * q2) - 1
+    r12 = 2 * (q2 * q3 - q0 * q1)
 
-    # Third row of the rotation matrix
-    r20 = 2 * (qx * qz - qw * qy)
-    r21 = 2 * (qy * qz + qw * qx)
-    r22 = 2 * (qw * qw + qz * qz) - 1
+    r20 = 2 * (q1 * q3 - q0 * q2)
+    r21 = 2 * (q2 * q3 + q0 * q1)
+    r22 = 2 * (q0 * q0 + q3 * q3) - 1
 
-    # 3x3 rotation matrix
-    rot_matrix_augm = np.array([[r00, r01, r02, x],
-                                [r10, r11, r12, y],
-                                [r20, r21, r22, z]])
+    # 3x3 rotation matrix concatenated with the 3x1 translation vector
+    matrix = np.array([[r00, r01, r02, x],
+                       [r10, r11, r12, y],
+                       [r20, r21, r22, z]])
 
-    return rot_matrix_augm
+    return matrix
 
 
 if __name__ == "__main__":
@@ -65,7 +60,6 @@ if __name__ == "__main__":
         print("Usage: python quaternion_to_matrix.py </path/to/your/text/file> </path/to/the/pose/folder>")
         sys.exit(1)
 
-    # Get arguments from the command line
     file_path = sys.argv[1]
     pose_folder_path = sys.argv[2]
     file_content = None
@@ -81,14 +75,13 @@ if __name__ == "__main__":
         sys.exit(1)
 
     poses = file_content.split('\n')[:-1]
-    
-    # Iterate through each pose and apply the transformation
+
+    # Iterate through each pose, apply the transformation and save it
     for pose in poses:
-        image_id, obj_id, qw, qx, qy, qz, x, y, z = pose.split(',')
-        Q = np.array([qw, qx, qy, qz], dtype=np.float32)
+        image_id, obj_id, q0, q1, q2, q3, x, y, z = pose.split(',')
+        Q = np.array([q0, q1, q2, q3], dtype=np.float32)
         translation = np.array([x, y, z], dtype=np.float32)
         matrix = quaternion_to_matrix(Q, translation)
         np.save(pose_folder_path + '/pose' + str(int(image_id)), matrix)
 
-
-    print(f"Number of transformation processed: {len(poses)}")
+    print(f"Number of transformation processed: {len(poses)}.")
