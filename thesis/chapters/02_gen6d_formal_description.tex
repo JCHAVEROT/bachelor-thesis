@@ -35,9 +35,9 @@ After conducting a scientific literature search, we decided on an interesting mo
 \section{Detection}
 \fancyhead[C]{\small\textsc{2.2. Detection}}
 
-In the detection phase, the initial step involves resizing both reference and query images. The reference images are resized to a dimension of ($128 \times 128$), with object centered. The query images are resized at various predefined scales. Subsequently, all the resized images are processed through a \ac{VGGNet}, which essentially functions as a deep convolutional network for extracting feature maps.
+In the detection phase, the initial step involves resizing both reference and query images. The reference images are resized to a dimension of ($128 \times 128$), with the object centered. The query images are resized at various predefined scales. Subsequently, all the resized images are processed through a \ac{VGGNet}, which essentially functions as a deep convolutional network for extracting feature maps.
 
-Following this, the feature maps from the reference images are utilized as convolutional kernels to convolve with one of the query images, resulting in the generation of a score map. Leveraging the multi-scale score map, we perform regression to obtain a heat map and a scale map. The final 2D detection is acquired by identifying the maximum value in the heat map, which provides the object's center coordinates, while the scale ($s$) is obtained from the same location in the scale map, by this way determining the size of the 2D bounding box.
+Following this, the feature maps from the reference images are utilized as convolutional kernels to convolve with one of the query images, resulting in the generation of a score map. Leveraging the multi-scale score map, we perform regression to obtain a heat map and a scale map. The final 2D detection is acquired by identifying the maximum value in the heat map, which provides the object's center coordinates, while the scale $s$ is obtained from the same location in the scale map, by this way determining the size of the 2D bounding box.
 
 \begin{figure}[ht]
   \centering

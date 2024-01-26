@@ -207,12 +207,11 @@ which means we wish to obtain an expression for $\bm{\mathrm{R}}$ by manipulatin
 \noindent This completes our derivation of the rotation matrix $\bm{\mathrm{R}}$. The Python code can be found in Listing~\ref{lst:4}.
 
 \section{Inverted Masks}
+\fancyhead[C]{\small\textsc{3.2. From Quaternions to Rotation Matrices}}
+During the initial testing of Gen6D on the \textsc{SpaceCraft} dataset, we noticed that the estimated poses were particularly inaccurate. Upon investigation, we discovered that in the reference images folder, the masks were incorrectly inverted: typically, one expects a white object on a black background, but it was the opposite (see Figure~\ref{fig:mask1} below).
 \fancyhead[C]{\small\textsc{3.3. Inverted Masks}}
-
-During the initial testing of Gen6D on the SpaceCraft dataset, we noticed that the estimated poses were particularly inaccurate. Upon investigation, we discovered that in the reference images folder, the masks were incorrectly inverted: typically, one expects a white object on a black background, but it was the opposite (see Figure~\ref{fig:mask1} below).
-
 After discussing this, we realized that this was actually an error in the current version of the dataset. Therefore, we needed to correct the masks we were using through a Python script utilizing the OpenCV library. 
-
+\fancyhead[C]{\small\textsc{3.3. Inverted Masks}}
 \begin{figure}[h]
     \centering
     \begin{minipage}{0.45\linewidth}
@@ -228,14 +227,14 @@ After discussing this, we realized that this was actually an error in the curren
         \label{fig:mask2}
     \end{minipage}
 \end{figure}
-
+\fancyhead[C]{\small\textsc{3.3. Inverted Masks}}
 \bigskip
 
-The Python script can be found in Listing~\ref{lst:5}.
+\noindent The Python script can be found in Listing~\ref{lst:5}.
 
 \section{Resized Query Images}
 
-During the initial testing of Gen6D, it became apparent that the deep learning model struggled when the object in the query image was either very large or very small (see Figure~\ref{fig:fig2} below). Consultation of the GitHub Issues section of the Gen6D repository revealed that this is a recurring problem: since the reference images are resized to $128\times 128$, the model's detector is trained to recognize an object in query images that ranges from half to double the size of the reference images, i.e., from $64\times 64$ to $256\times 256$.
+During the initial testing of Gen6D, it became apparent that the deep learning model struggled when the object in the query image was either very large or very small (see Figure~\ref{fig:fig2} and Figure~\ref{fig:fig1} below). Consultation of the GitHub Issues section of the Gen6D repository revealed that this is a recurring problem: since the reference images are resized to $128\times 128$, the model's detector is trained to recognize an object in query images that ranges from half to double the size of the reference images, i.e., from $64\times 64$ to $256\times 256$.
 
 \bigskip
 
