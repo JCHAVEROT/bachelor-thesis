@@ -8,11 +8,7 @@ abstract base classes (ABC)
 each and every abstract method
 
 \section{From Quaternions to Rotation Matrices}
-\pagestyle{fancy}
-\fancyhf{}
 \fancyhead[C]{\small\textsc{3.2. From Quaternions to Rotation Matrices}}
-\renewcommand{\footrulewidth}{0.4pt} % adds a line above the footer
-\fancyfoot[C]{\small\thepage} % center the page number in the footer
 
 In Gen6D, the model represents the ground truth and estimated poses using the format ${\bm{\mathrm{P}}}=(\bm{\mathrm{R}},\,\bm{\mathrm{t}})$. Here, $\bm{\mathrm{R}}$ denotes the rotation matrix and $\bm{\mathrm{t}}$ is the translation vector.
 The thing is, in the \textsc{SpaceCraft} dataset, the poses have the format ${\bm{\mathrm{P}}}=(\underline{\bm{\mathrm{q}}},\,\bm{\mathrm{t}})$, where $\underline{\bm{\mathrm{q}}}$ is a \textit{quaternion}. We use quaternions for three-dimensional rotation calculations because they offer several benefits over rotation matrices. Notably, quaternions are more compact, requiring only four elements to be stored compared to nine for a matrix. Additionally, they are more efficient when composing rotations thanks to their algebraic properties.

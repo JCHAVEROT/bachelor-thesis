@@ -2,41 +2,31 @@
 % Add the above to each chapter to make compiling the PDF easier in some editors.
 
 \chapter{Introduction}\label{chapter:introduction}
-Test ref to Listing~\ref{lst:1}. Test ref to Listing~\ref{lst:3}
-Test ref to Gen6D \cite{liu2023gen6d}
+\renewcommand{\headrulewidth}{0.4pt}
+
+This project falls within an Unseen 6 \ac{DoF} competition, organized in collaboration with the \ac{ESA} Advanced Concept Team. Essentially, we are dealing with space objects that are unfamiliar to us, and our objective is to accurately predict their 6\ac{DoF} poses. The action of the \ac{CVLab} team is twofold: firstly, we are tasked with creating a challenging dataset featuring multi-object, unseen, and occluded spacecraft scenarios. This involves ensuring a high degree of rendering realism. Secondly, we are focused on developing a baseline solution, which entails implementing a chosen pose estimation model and conducting thorough training and testing on our dataset. My role this semester was primarily concentrated on the latter aspect, specifically on a track that incorporated target models.
+
 \section{Problem Formulation}
-\subsection{The settings}
-\subsection{The goal}
+
+To put it simply, our task involves analyzing images of space objects with the aim of accurately determining the relative 3D translation and 3D rotation of the spacecraft in relation to the camera's position.
+
+For the training and testing of the selected deep learning architecture, we utilize synthetic images provided by the \textsc{SpaceCraft} dataset team. This dataset encompasses four distinct models: the Hubble Space Telescope, the James Webb Space Telescope, the Cosmos Link, and the Rocket Body. These images may feature an Earth-rendered background or be without it. In addition to the images, our dataset includes 3D models, masks, segmented images, and camera settings. Furthermore, the ground truth poses of the objects are available in a format that combines quaternions with a translation vector.
+
+\section{Applications}
+\fancyhead[C]{\small\textsc{1.2. Applications}}
+
+Beyond the scope of the \ac{ESA} competition, the project has numerous practical applications in the aerospace industry.
+
+\paragraph{Remediation of Space Debris in \ac{LEO}} The developed pose estimation models can significantly enhance the identification and tracking of space debris, enabling precise navigation for cleanup missions.
+
+\paragraph{Space Monitoring} The technology can also be utilized for the constant surveillance and cataloging of artificial and natural objects in space, improving awareness of the space environment and collision avoidance systems.
+
+\paragraph{Planetary Defense Technology} Finally we could think about the accurate pose estimation capabilities serving as a critical component in planetary defense missions by ensuring precise targeting of potentially hazardous small celestial bodies, for instance the NASA’s \ac{DART} mission in 2021, which was the first-ever asteroid deflection mission through kinetic impact.
+
 \section{The work environment: Scitas Izar}
-Test to refer to the video from 3B1B: \cite{3b1b-1}.
 
-\begin{lstlisting}[style=bashstyle, caption={Bash script \texttt{execute.sh} to run a machine learning model on Scitas Izar EPFL. While the overall structure remains consistent, this script is specific to Gen6D's architecture, further discussed later.}]
-#!/bin/bash
-#SBATCH --chdir /scratch/izar/jchavero
-#SBATCH --partition=gpu
-#SBATCH --qos=gpu_free
-#SBATCH --gres=gpu:2
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=1
-#SBATCH --mem 16G
+We needed to establish a suitable environment for executing the code: EPFL Scitas Izar servers. They are are ideally configured for our task: equipped with two NVIDIA V100 PCIe 32 GB GPUs, the most advanced data center GPUs ever built to accelerate \ac{AI}, \ac{HPC}, data science and graphics (very expensive as well). Additionally, the server enables users to execute the code from any location, eliminating the need for a sufficiently powerful hardware configuration.
 
-echo STARTING AT `date`
+However, this stage proved to be more time-consuming than expected. It involved software engineering and various technical challenges, including setting up the virtual environment, installing the necessary dependencies in a manner that avoids conflicts with the modules already installed on the server, composing the bash execution script, and, fundamentally, learning the correct way to utilize the server. Special recognition goes to Emily Bourne from the EPFL \ac{HPC} team for her essential help and support.
 
-echo "Loading modules"
-module load gcc openmpi py-torch py-torchvision cuda
-
-echo "Launching the virtual environment"
-source ~/opt/izar1/venv-gcc/bin/activate
-
-echo "Navigating to the directory and executing the task"
-cd ~/Gen6D                                    
-python eval.py --cfg configs/gen6d_pretrain.yaml --object_name spacecraft/hubble
-
-echo FINISHED AT `date`
-\end{lstlisting}
-
-\noindent Then to run the script we use the following command:
-\begin{lstlisting}[style=bashstyle, caption=Linux command to run the bash script.]
-	$ sbatch execute.sh
-\end{lstlisting}
+For those who wish to run the model, instructions for setting up the environment are provided in the appendix of this report.

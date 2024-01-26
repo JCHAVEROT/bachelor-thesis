@@ -1,7 +1,11 @@
 %\chapter{\abstractname}
 
 \addcontentsline{toc}{chapter}{Abstract}
-%\thispagestyle{empty}
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot[C]{\small\thepage} % page number in the center of the footer
+\renewcommand{\headrulewidth}{0pt} % optional: removes the header line
+\renewcommand{\footrulewidth}{0.4pt} % footer line
 
 \vspace*{20mm}
 
@@ -9,4 +13,4 @@
     {\usekomafont{sectioning}\usekomafont{section}\textbf{\large \abstractname} }
 \end{center}
 
-%TODO: Abstract
+\noindent Nowadays, the significant number of objects in \ac{LEO} is becoming a matter of concern, with the potential to create even more space debris. Therefore, it's becoming crucial to develop technologies to tackle this pollution. One can envision a clean-up mission where devices are equipped with quantized deep learning models to estimate the position of these objects for retrieval. Training these models is challenging, as the real image database is quite sparse. To overcome this, high-quality, realistic synthetic images of spacecraft are used, with the ultimate goal of generalizing to unseen objects.
