@@ -1,9 +1,56 @@
-\chapter{Scitas Izar Setup Tutorial}
+\chapter{Scitas Izar Setup Tutorial}\label{chapter:scitas}
 \fancyhead[C]{\small\textsc{B. Scitas Izar Setup Tutorial}}
 
-\begin{lstlisting}[style=bashstyle, caption={Bash script \texttt{execute.sh} to run a machine learning model on Scitas Izar EPFL. While the overall structure remains consistent, this script is specific to Gen6D's architecture, further discussed later.}]
+This tutorial aims to set up the Scitas Izar environment step by step in order to run Gen6D.
+
+\bigskip
+
+\noindent Step 1: Request permission via email to use the Scitas servers. Unfortunately, I can't provide more details, as I had the privilege of attending an EPFL course that automatically granted me access.
+
+\bigskip
+
+
+\noindent Step 2: Download the following GitHub repository: \\ \url{https://github.com/JCHAVEROT/Gen6D/}
+
+\bigskip
+
+
+\noindent Step 3: Follow the instructions provided by the authors of Gen6D to set up the model (specifically, download the Gen6D pretrained model and place it in the correct location).
+
+\bigskip
+
+
+\noindent Step 3: Ensure you're on the EPFL internet network in person or connect to the EPFL VPN.
+
+\bigskip
+
+
+\noindent Step 4: Transfer the Gen6D files to your Scitas Izar session using on your computer the command:
+{ \captionsetup{labelformat=empty,labelsep=none}
+\begin{lstlisting}[style=bashstyle, caption=\null]
+rsync -azP <your/path/to/Gen6D> <username>@izar.epfl.ch:~/
+\end{lstlisting}
+}
+
+\vspace{-0.4cm}
+
+\noindent Step 5: Create a virtual environment on your Scitas Izar Session using the instructions at: \url{https://scitas-doc.epfl.ch/user-guide/software/python/python-venv/}  and activate it.
+
+\bigskip
+
+
+\noindent Step 6: Install all the necessary libraries for Gen6D to function, listed in the \texttt{requirements.txt} file, except for openmpi, py-torch, py-torchvision, and cuda.
+
+\bigskip
+
+
+\noindent Step 7: Compose your execute.sh file, in which you put the commands you want to run (use the provided template, do not modify the modules load). Notice that you need to replace the \texttt{<username>} section with yours.
+
+\bigskip
+
+\begin{lstlisting}[style=bashstyle, caption={Bash script \texttt{execute.sh} to run a machine learning model on Scitas Izar EPFL. While the overall structure remains consistent, this script is specific to Gen6D's architecture.}]
 #!/bin/bash
-#SBATCH --chdir /scratch/izar/jchavero
+#SBATCH --chdir /scratch/izar/<username>
 #SBATCH --partition=gpu
 #SBATCH --qos=gpu_free
 #SBATCH --gres=gpu:2
@@ -22,15 +69,57 @@ source ~/opt/izar1/venv-gcc/bin/activate
 
 echo "Navigating to the directory and executing the task"
 cd ~/Gen6D                                    
-python eval.py --cfg configs/gen6d_pretrain.yaml --object_name spacecraft/hubble
+python eval.py --cfg configs/gen6d_pretrain.yaml --object_name spacecraft/hubble --symmetric
+python eval.py --cfg configs/gen6d_pretrain.yaml --object_name spacecraft/jwst --symmetric
+python eval.py --cfg configs/gen6d_pretrain.yaml --object_name spacecraft/cosmos --symmetric
+python eval.py --cfg configs/gen6d_pretrain.yaml --object_name spacecraft/rocket --symmetric
 
 echo FINISHED AT `date`
 \end{lstlisting}
 
-\noindent Then to run the script we use the following command:
-\begin{lstlisting}[style=bashstyle, caption=Linux command to run the bash script.]
-	$ sbatch execute.sh
+\bigskip
+
+
+\noindent Step 8: Use the following command to submit the job:
+{ \captionsetup{labelformat=empty,labelsep=none}
+\begin{lstlisting}[style=bashstyle, caption=\null]
+sbatch execute.sh
 \end{lstlisting}
+}
+
+\vspace{-0.4cm}
+
+\noindent Step 9: Find the pose estimation results in folder \texttt{~/Gen6D/data}. You can get them back on your computer using the commands:
+{ \captionsetup{labelformat=empty,labelsep=none}
+\begin{lstlisting}[style=bashstyle, caption=\null, keywordstyle=\color{black}]
+rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/performance.log <folder/on/your/computer>
+rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/eval <folder/on/your/computer>
+rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/vis_inter <folder/on/your/computer>
+rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/vis_final <folder/on/your/computer>
+\end{lstlisting}
+}
+\bigskip
+
+
+\bigskip
+
+
+\paragraph{Pro Tip} 
+\bigskip
+\noindent Once the job submitted, you'll have access to the console log in the folder \texttt{scratch/izar/<username>}. Once on Scitas Izar, to go there, do the following command:
+{ \captionsetup{labelformat=empty,labelsep=none}
+\begin{lstlisting}[style=bashstyle, caption=\null]
+cd && cd /scratch/izar/<username>
+\end{lstlisting}
+}
+
+\bigskip
+
+\noindent You can find a lot of useful command to control your job at this link: \url{https://scitas-doc.epfl.ch/user-guide/using-clusters/running-jobs/}
+
+\bigskip
+
+\noindent I will keep the \texttt{README.md} file in the repository \url{https://github.com/JCHAVEROT/Gen6D/} updated to provide more information if necessary. Additionally, you'll find a compressed `zip` file that includes well-organized \textsc{SpaceCraft} images, allowing you to promptly test your setup and providing a template folder for your convenience.
 
 
 

@@ -4,13 +4,32 @@
 \chapter{Gen6D: Formal Description}\label{chapter:gen6d_formal_description}
 
 \section{Overview of the Network}
-After conducting a literature search, we decided on an interesting model known as Gen6D. This architecture is fed with reference and query images, and operates in a relatively straightforward manner, comprising three stages. Initially, there's the detector, which, as its name suggests, detects the object in the query image. Next is the viewpoint selection, which selects reference images that have the closest viewing angle to the detected object in the query image by using a similarity score. Finally, there's the pose refiner, which enhances the accuracy of the estimated pose through a 3D volume-based process.
+After conducting a scientific literature search, we decided on an interesting model known as Gen6D: Generalizable Model-Free 6-\ac{DoF} Object Pose Estimation from RGB Images \cite{liu2023gen6d}. This architecture is fed with reference and query images, and operates in a relatively straightforward manner, comprising three stages shown in Figure~\ref{fig:fig0}. Initially, there's the detector, which, as its name suggests, detects the object in the query image. Next is the viewpoint selection, which selects reference images that have the closest viewing angle to the detected object in the query image by using a similarity score. Finally, there's the pose refiner, which enhances the accuracy of the estimated pose through a 3D volume-based process. We have compiled a table summarizing the advantages and disadvantages for a clearer understanding:
+
+\begin{table}[htpb]
+  \caption[Example table]{Summary of Gen6D}\label{tab:sample}
+  \centering
+  \small
+  \begin{tabular}{l | l}
+    \toprule
+      Pros & Cons \\
+    \midrule
+      Generalizability & Limited by Reference Image Quality \\
+      Model-Free & Everyday Life Objects Training Data \\
+      Simple Input Requirements & Difficulty with Symmetric Objects \\
+      Robustness to Background Clutter & Dependence on Initial Detection and Selection \\
+      Effective in Diverse Environments & Potential Challenges with Severe Occlusions \\
+      Competitive Performance & Computationally Intensive \\
+    \bottomrule
+  \end{tabular}
+  \label{tab:tab}
+\end{table}
 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{data/gen6d1.png}
-  \caption{Overview of Gen6D, image sourced from Gen6D's research paper}
-  \label{fig:fig13}
+  \caption{Overview of Gen6D, image sourced from Gen6D's research paper.}
+  \label{fig:fig0}
 \end{figure}
 
 \section{Detection}
@@ -23,8 +42,8 @@ Following this, the feature maps from the reference images are utilized as convo
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{data/gen6d2.png}
-  \caption{Architecture of the detector, image sourced from Gen6D's research paper}
-  \label{fig:fig13}
+  \caption{Architecture of the detector, image sourced from Gen6D's research paper.}
+  \label{fig:fig1}
 \end{figure}
 
 \section{Viewpoint Selection}
@@ -39,8 +58,8 @@ It's worth highlighting that within the similarity network, the authors have imp
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{data/gen6d3.png}
-  \caption{Architecture of the viewpoint selector, image sourced from Gen6D's \\ research paper}
-  \label{fig:fig13}
+  \caption{Architecture of the viewpoint selector, image sourced from Gen6D's \\ research paper.}
+  \label{fig:fig2}
 \end{figure}
 
 \section{Pose Refinement}
@@ -56,8 +75,8 @@ At the end, we have a 3D \ac{CNN} that operates on the concatenated feature set 
 \begin{figure}[ht]
   \centering
   \includegraphics[width=\textwidth]{data/gen6d4.png}
-  \caption{Architecture of the pose refiner, image sourced from Gen6D's research paper}
-  \label{fig:fig13}
+  \caption{Architecture of the pose refiner, image sourced from Gen6D's research paper.}
+  \label{fig:fig3}
 \end{figure}
 
 \fancyhead[C]{\small\textsc{2.4. Pose Refinement}}

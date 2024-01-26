@@ -4,8 +4,42 @@
 \chapter{Implementation of the model}\label{chapter:implementation_of_the_model}
 
 \section{Data Loader}
-abstract base classes (ABC)
-each and every abstract method
+
+Now that we have a better understanding of how Gen6D operates, we're interested in testing it with the synthetic images from the \textsc{SpaceCraft} dataset. To accomplish this, we need to redefine the Data Loader to supply the model with the necessary data in the required format. In the file \texttt{database.py}, located in the \texttt{Gen6D/dataset} directory, there is an \ac{ABC} named \texttt{BaseDatabase()} containing all the essential methods, as shown in the code below:
+
+\bigbreak
+
+\begin{lstlisting}[style=pythonstyle, label=lst:0, caption={Python code of \ac{ABC} \texttt{BaseDatabase()}, from file \texttt{database.py}.}]
+	class BaseDatabase(abc.ABC):
+    def __init__(self, database_name):
+        self.database_name = database_name
+
+    @abc.abstractmethod
+    def get_image(self, img_id):
+        pass
+
+    @abc.abstractmethod
+    def get_K(self, img_id):
+        pass
+
+    @abc.abstractmethod
+    def get_pose(self, img_id):
+        pass
+
+    @abc.abstractmethod
+    def get_img_ids(self):
+        pass
+
+    def get_mask(self,img_id):
+        # dummy mask
+        img = self.get_image(img_id)
+        h, w = img.shape[:2]
+        return np.ones([h,w],np.bool_)
+\end{lstlisting}
+
+\bigbreak
+
+Our goal, therefore, is to write a new class that inherits from the \ac{ABC} \\\texttt{BaseDatabase()}, and implement each abstract method in the same manner as it was done for the \textsc{Linemod} and \textsc{GenMOP} datasets, for example. We will also adapt the code in various places, especially in the \texttt{eval.py} file, to ensure compatibility with the \textsc{SpaceCraft} dataset. The Python code for the new data loading class \texttt{SpaceCraftCVLabDatabase()} can be found in Listing~\ref{lst:1}.
 
 \section{From Quaternions to Rotation Matrices}
 \fancyhead[C]{\small\textsc{3.2. From Quaternions to Rotation Matrices}}
@@ -170,4 +204,55 @@ which means we wish to obtain an expression for $\bm{\mathrm{R}}$ by manipulatin
 
 \bigskip
 
-\noindent This completes our derivation of the rotation matrix $\bm{\mathrm{R}}$. The Python code can be found in Listing~\ref{lst:3}.
+\noindent This completes our derivation of the rotation matrix $\bm{\mathrm{R}}$. The Python code can be found in Listing~\ref{lst:4}.
+
+\section{Inverted Masks}
+\fancyhead[C]{\small\textsc{3.3. Inverted Masks}}
+
+During the initial testing of Gen6D on the SpaceCraft dataset, we noticed that the estimated poses were particularly inaccurate. Upon investigation, we discovered that in the reference images folder, the masks were incorrectly inverted: typically, one expects a white object on a black background, but it was the opposite (see Figure~\ref{fig:mask1} below).
+
+After discussing this, we realized that this was actually an error in the current version of the dataset. Therefore, we needed to correct the masks we were using through a Python script utilizing the OpenCV library. 
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{data/mask1.png} % First image
+        \caption{James Webb Space Telescope, mask before correction.}
+        \label{fig:mask1}
+    \end{minipage}\hfill
+    \begin{minipage}{0.45\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{data/mask2.png} % Second image
+        \caption{James Webb Space Telescope, mask after correction using a script.}
+        \label{fig:mask2}
+    \end{minipage}
+\end{figure}
+
+\bigskip
+
+The Python script can be found in Listing~\ref{lst:5}.
+
+\section{Resized Query Images}
+
+During the initial testing of Gen6D, it became apparent that the deep learning model struggled when the object in the query image was either very large or very small (see Figure~\ref{fig:fig2} below). Consultation of the GitHub Issues section of the Gen6D repository revealed that this is a recurring problem: since the reference images are resized to $128\times 128$, the model's detector is trained to recognize an object in query images that ranges from half to double the size of the reference images, i.e., from $64\times 64$ to $256\times 256$.
+
+\bigskip
+
+Therefore, to improve the detector's results, resizing the query images is necessary. This is accomplished using a Python script that can be found in Listing~\ref{lst:6}. It's important to note that this adjustment also requires modifying the camera intrinsic matrix $\bm{\mathcal{K}}$ in the data loader, which converts points from the camera coordinate system to the pixel coordinate system.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.70\linewidth]{data/fig2.jpg} % First image
+    \caption{Hubble Space Telescope with earth rendered background, 1024x1024 query image number 1, poor pose estimation (blue 3D bounding box) when the object inside the query image is too big.}
+    \label{fig:fig2}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.70\linewidth]{data/fig1.jpg} % Second image
+    \caption{Hubble Space Telescope with earth rendered background, 1024x1024 query image number 2, poor pose estimation (blue 3D bounding box) when the object inside the query image is too big.}
+    \label{fig:fig1}
+\end{figure}
+
+\fancyhead[C]{\small\textsc{3.4. Resized Query Images}}

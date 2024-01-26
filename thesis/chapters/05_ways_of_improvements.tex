@@ -3,7 +3,23 @@
 
 \chapter{Ways of improvements}\label{chapter:ways_of_improvements}
 
-\section{Specialized spacecraft training set}
-\section{Improved object detection algorithms}
-Rely more on the 3D model (for now only the size) and the segmented images, would optimize for symmetric and irregular shaped spacecrafts
-\section{Robustness to occlusion}
+As we observed in the previous chapter, Gen6D does not perform very well when generalizing to space objects. In this section, we will attempt to provide some tracks for improving the results of pose estimations.
+
+\section{More diverse Reference Images}
+
+Given the time constraints, we evaluated Gen6D under basic conditions, by using reference images from a folder of random synthetic images. To enhance the model's performance, one approach would be to diversify as much as possible the external conditions affecting the object's image through the camera, particularly lighting. As we observed, lighting plays a significant role during viewpoint selection. Having a more varied set of reference images would enable the model to better adapt to new conditions. Additionally, it's essential to ensure that the reference images are distributed as homogeneously as possible around the object. 
+
+\section{Specialized Spacecraft Training Set}
+
+To assess the ability of Gen6D to generalize, we opted not to retrain the model but instead utilized the pretrained model made available by the authors. This approach may introduce a challenge, as highlighted in Table~\ref{tab:tab}, where one of Gen6D's limitations is its training on everyday objects under favorable lighting conditions.
+
+A viable solution would be to retrain Gen6D, focusing on specific components rather than the entire model. Specifically, retraining only the detector and the viewpoint selector, while keeping the refiner as is, could be effective. Indeed, retraining the detector would allow for the addition of new detecting scales for the object in query images, improving the accuracy of the estimated 2D bounding box. Additionally, retraining the viewpoint selector could prove beneficial for making pose estimations under poor lighting conditions. As for the refiner, as previously observed, it seems to perform pretty well and may not require retraining.
+
+\section{Improve Object Detection and Viewpoint Selection Algorithms}
+\fancyhead[C]{\small\textsc{5.3. Improve Object Detection and Viewpoint Selection Algorithms}}
+
+A limitation of the current architecture of Gen6D is indeed its detector: it requires predefined object scales in the query images for detection. This is a significant constraint, especially in competitive scenarios where the object could be very close or very far away. Additionally, the current necessity to resize query images leads to information loss and adds a manual step to the process.
+
+To address this, the implementation of a \ac{FPN} could be a substantial improvement \cite{lin2017feature}. \ac{FPN}s are known for their efficiency in detecting objects at various scales through the utilization of a pyramidal hierarchy of deep convolutional networks. Incorporating a FPN into Gen6D's architecture would enhance its ability to detect objects regardless of their distance or size in the query images, thus potentially improving overall performance.
+
+During the detection and viewpoint selection phase, we could also think about relying more on the 3D model (for now it is only used to get the estimated 3D bounding box size) and the segmented images (currently unused), to get better results.

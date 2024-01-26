@@ -4,7 +4,7 @@
 \chapter{Introduction}\label{chapter:introduction}
 \renewcommand{\headrulewidth}{0.4pt}
 
-This project falls within an Unseen 6 \ac{DoF} competition, organized in collaboration with the \ac{ESA} Advanced Concept Team. Essentially, we are dealing with space objects that are unfamiliar to us, and our objective is to accurately predict their 6\ac{DoF} poses. The action of the \ac{CVLab} team is twofold: firstly, we are tasked with creating a challenging dataset featuring multi-object, unseen, and occluded spacecraft scenarios. This involves ensuring a high degree of rendering realism. Secondly, we are focused on developing a baseline solution, which entails implementing a chosen pose estimation model and conducting thorough training and testing on our dataset. My role this semester was primarily concentrated on the latter aspect, specifically on a track that incorporated target models.
+This project falls within an Unseen 6 \ac{DoF} competition, organized in collaboration with the \ac{ESA} Advanced Concept Team. Essentially, we are dealing with space objects that are unfamiliar to us, and our objective is to accurately predict their 6\ac{DoF} poses. The action of the \ac{CVLab} team is twofold: firstly, we are tasked with creating a challenging dataset featuring multi-object, unseen, and occluded spacecraft scenarios. This involves ensuring a high degree of rendering realism. Secondly, we are focused on developing a baseline solution, which entails implementing a chosen pose estimation model and conducting thorough training and testing on our dataset. My role this semester was primarily concentrated on the latter aspect, specifically on a track that incorporated 3D target models.
 
 \section{Problem Formulation}
 
@@ -23,10 +23,10 @@ Beyond the scope of the \ac{ESA} competition, the project has numerous practical
 
 \paragraph{Planetary Defense Technology} Finally we could think about the accurate pose estimation capabilities serving as a critical component in planetary defense missions by ensuring precise targeting of potentially hazardous small celestial bodies, for instance the NASA’s \ac{DART} mission in 2021, which was the first-ever asteroid deflection mission through kinetic impact.
 
-\section{The work environment: Scitas Izar}
+\section{The Work Environment: EPFL Scitas Izar}
 
 We needed to establish a suitable environment for executing the code: EPFL Scitas Izar servers. They are are ideally configured for our task: equipped with two NVIDIA V100 PCIe 32 GB GPUs, the most advanced data center GPUs ever built to accelerate \ac{AI}, \ac{HPC}, data science and graphics (very expensive as well). Additionally, the server enables users to execute the code from any location, eliminating the need for a sufficiently powerful hardware configuration.
 
 However, this stage proved to be more time-consuming than expected. It involved software engineering and various technical challenges, including setting up the virtual environment, installing the necessary dependencies in a manner that avoids conflicts with the modules already installed on the server, composing the bash execution script, and, fundamentally, learning the correct way to utilize the server. Special recognition goes to Emily Bourne from the EPFL \ac{HPC} team for her essential help and support.
 
-For those who wish to run the model, instructions for setting up the environment are provided in the appendix of this report.
+For those who wish to run the model, instructions for setting up the environment are provided in Appendix~\ref{chapter:scitas} of this report.

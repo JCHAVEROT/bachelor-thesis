@@ -1,11 +1,94 @@
 \chapter{Python Scripts}
 \fancyhead[C]{\small\textsc{A. Python Scripts}}
 
-\begin{lstlisting}[style=pythonstyle, label=lst:1, caption=Python script \texttt{format.py} to randomly generate the training set and the test set based on a specified probability. Should be run from Gen6D's root folder.]
+
+\begin{lstlisting}[style=pythonstyle, label=lst:1, caption=Python code of the data loading class \texttt{SpaceCraftCVLabDatabase()} from file \texttt{database.py}.]
+SPACECRAFT_ROOT='data/SpaceCraft'
+class SpaceCraftCVLabDatabase(BaseDatabase):
+    def __init__(self, database_name):
+        super().__init__(database_name)
+        _, self.model_name = database_name.split('/')
+        self.img_ids = [str(k) for k in range(len(os.listdir(f'{SPACECRAFT_ROOT}/{self.model_name}/images')))]
+        self.model = self.get_ply_model().astype(np.float32)
+        self.object_center = np.zeros(3, dtype=np.float32)
+        self.object_vert = np.asarray([0,0,1], np.float32)
+        self.img_id2depth_range = {}
+        self.img_id2pose = {}
+        _, self.database_type = self.model_name.split('-')
+        # Track 1: SpaceCraft dataset camera intrinsic matrix
+        self.K=np.array([[1406.708374, 0.000000, 512.000000], [0.000000, 1406.708374, 512.000000], [0.000000, 0.000000, 1.000000]], dtype=np.float32)
+        # Track 2: SwissCube dataset camera intrinsic matrix
+        # self.K=np.array([[607.5730322397038, 0.000000, 512.000000], [0.000000, 607.5730322397038, 512.000000], [0.000000, 0.000000, 1.000000]], dtype=np.float32)
+        if self.database_type == 'test':
+            resize_factor = np.loadtxt(f"{SPACECRAFT_ROOT}/{self.model_name}/resize_factor.txt")
+            self.K *= resize_factor
+            self.K[2, 2] = 1
+        # Note : This following portion of code is to uncomment when the ground truth poses are store in a JSON file,
+        #        like for the SwissCube dataset.
+        # with open(f'{SPACECRAFT_ROOT}/{self.model_name}/scene_gt.json', 'r') as file:
+        #     self.pose = json.load(file)
+
+    def get_ply_model(self):
+        fn = Path(f'{SPACECRAFT_ROOT}/{self.model_name}/{self.model_name}.pkl')
+        if fn.exists(): return read_pickle(str(fn))
+        ply = plyfile.PlyData.read(f'{SPACECRAFT_ROOT}/{self.model_name}/{self.model_name}.ply')
+        data = ply.elements[0].data
+        x = data['x']
+        y = data['y']
+        z = data['z']
+        model = np.stack([x, y, z], axis=-1)
+        if model.shape[0]>4096:
+            idxs = np.arange(model.shape[0])
+            np.random.shuffle(idxs)
+            model = model[idxs[:4096]]
+        save_pickle(model, str(fn))
+        return model
+
+    def get_image(self, img_id):
+        # Track 1: SpaceCraft dataset image format
+        return imread(f'{SPACECRAFT_ROOT}/{self.model_name}/images/{int(img_id):04}.png')
+        # Track 2: SwissCube dataset image format
+        # return imread(f'{SPACECRAFT_ROOT}/{self.model_name}/images/{int(img_id):06}.jpg')
+
+    def get_K(self, img_id):
+        return np.copy(self.K)
+
+    def get_pose(self, img_id):
+        # Track 1: Gen6D's pose format
+        if img_id in self.img_id2pose:
+            return self.img_id2pose[img_id]
+        else:
+            pose = np.load(f'{SPACECRAFT_ROOT}/{self.model_name}/pose/pose{int(img_id)}.npy')
+            self.img_id2pose[img_id] = pose
+            return pose
+        # Note : This following portion of code is to uncomment when the ground truth poses are store in a JSON file,
+        #        like for the SwissCube dataset. Do not forget to comment track 1 above.
+        # Track 2: SwissCube dataset json pose format
+        # raw_pose = (self.pose[f'{int(img_id) + 1}'])[0]
+        # rot_mat = np.asarray(raw_pose['cam_R_m2c'])
+        # rot_mat = np.reshape(rot_mat, (3, 3))
+        # transl_vec = np.asarray(raw_pose['cam_t_m2c'])
+        # transl_vec = np.reshape(transl_vec, (3, 1))
+        # pose = np.concatenate((rot_mat, transl_vec), axis=1)
+        # return pose
+
+    def get_img_ids(self):
+        return self.img_ids.copy()
+
+    def get_mask(self, img_id):
+        # Track 1: SpaceCraft dataset image format
+        return np.sum(imread(f'{SPACECRAFT_ROOT}/{self.model_name}/mask/{int(img_id):04}.png'),-1)>0
+        # Track 2: SwissCube dataset image format
+        #return np.sum(imread(f'{SPACECRAFT_ROOT}/{self.model_name}/mask/{int(img_id):06}.png'),-1)>0
+\end{lstlisting}
+
+\cleardoublepage{}
+
+\begin{lstlisting}[style=pythonstyle, label=lst:2, caption=Python script \texttt{format.py} to randomly generate the training set and the test set based on a specified probability. This script is used when creating both the reference set and the query set from a common set of images. Should be run from Gen6D's root folder.]
 """
 Author:      Jeremy Chaverot
 Date:        November 29, 2023
-Description: Create the files val.txt, train.txt and test.txt according to a test percentage
+Description: Create the files val.txt, train.txt and test.txt according to a test percentage.
 """
 
 import os
@@ -27,16 +110,15 @@ if __name__ == "__main__":
         print("Wrong value for the variable <test_percentage>. Should be between 0 and 1 included.")
         sys.exit(1)
 
-    # Get a list of all files in the folder
+    # List of files in the given folder
     all_files = os.listdir(f'data/SpaceCraft/{object}/images')
 
-    # Filter the list to include only image files and exclude MacOS temporary files
+    # Filter the list to select only images and exclude MacOS temporary files
     image_files = [file for file in all_files if file.lower().endswith(('.jpg')) and not file.startswith('._')]
 
-    # Get the number of images in the folder
     num_images = len(image_files)
 
-    # Iterate through each image and apply the transformation
+    # Transform each image
     with open(f'data/SpaceCraft/{object}/train.txt', 'w') as train, open(f'data/SpaceCraft/{object}/test.txt', 'w') as test:
         for image_file in image_files:
             rand = random.random()
@@ -48,10 +130,9 @@ if __name__ == "__main__":
     print(f"Done splitting {num_images} images in train.txt and test.txt")
 \end{lstlisting}
 
-%\cleardoublepage{}
-\bigskip
+\cleardoublepage{}
 
-\begin{lstlisting}[style=pythonstyle, label=lst:2, caption=Python script \texttt{to\_jpg.py} to transform every images of a specified folder into \texttt{jpg} format.]
+\begin{lstlisting}[style=pythonstyle, label=lst:3, caption=Python script \texttt{to\_jpg.py} to transform every images of a specified folder into \texttt{jpg} format.]
 """
 Author:      Jeremy Chaverot
 Date:        November 20, 2023
@@ -78,16 +159,15 @@ if __name__ == "__main__":
 
     folder_path = sys.argv[1]
 
-    # Get a list of all files in the folder
+    # List of files in the given folder
     all_files = os.listdir(folder_path)
     
-    # Filter the list to include only image files and exclude MacOS temporary files
+    # Filter the list to select only images and exclude MacOS temporary files
     image_files = [file for file in all_files if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')) and not file.startswith('._')]
     
-    # Get the number of images in the folder
     num_images = len(image_files)
 
-    # Iterate through each image and apply the transformation
+    # Transform each image
     for image_file in image_files:
         image_path = os.path.join(folder_path, image_file)
         transform_image(image_path)
@@ -97,10 +177,9 @@ if __name__ == "__main__":
 \end{lstlisting}
 
 
-%\cleardoublepage{}
-\bigskip
+\cleardoublepage{}
 
-\begin{lstlisting}[style=pythonstyle, label=lst:3, caption=Python script \texttt{quaternion\_to\_matrix.py} to transform a txt file with quaternions and the translation vector into multiple npy files containing the rotation matrix augmented with the translation vector.]
+\begin{lstlisting}[style=pythonstyle, label=lst:4, caption=Python script \texttt{quaternion\_to\_matrix.py} to transform a txt file with quaternions and the translation vector into multiple npy files containing the rotation matrix augmented with the translation vector.]
 """
 Author:      Jeremy Chaverot
 Date:        November 20, 2023
@@ -189,10 +268,9 @@ if __name__ == "__main__":
     print(f"Number of transformation processed: {len(poses)}.")
 \end{lstlisting}
 
-%\cleardoublepage{}
-\bigskip
+\cleardoublepage{}
 
-\begin{lstlisting}[style=pythonstyle, label=lst:4, caption=Python script \texttt{invert\_mask.py} to invert the masks from a specified folder. We aim to have a black object set against a white background.]
+\begin{lstlisting}[style=pythonstyle, label=lst:5, caption=Python script \texttt{invert\_mask.py} to invert the masks from a specified folder. We aim to have a black object set against a white background.]
 """
 Author:      Jeremy Chaverot
 Date:        December 10, 2023
@@ -211,23 +289,19 @@ def inverse_masks_in_folder(folder_path):
         if filename.endswith(".png") and not filename.startswith('._'):
             mask_path = os.path.join(folder_path, filename)
             try:
-                # Read the mask image
+                
                 mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
                 if mask is None:
                     print(f"Failed to read image: {mask_path}")
-                    continue
-
-                # Invert the mask
-                inverted_mask = cv2.bitwise_not(mask)
-
-                # Save the inverted mask with a temporary name
+                    continue               
+                inverted_mask = cv2.bitwise_not(mask)    
                 temp_path = os.path.join(folder_path, "temp_" + filename)
                 cv2.imwrite(temp_path, inverted_mask)
 
-                # Delete the original mask
+                # Delete the original wrong mask
                 os.remove(mask_path)
 
-                # Rename the inverted mask to the original filename
+                # Rename the inverted mask
                 os.rename(temp_path, mask_path)
                 print(f"Inverted and replaced mask for: {mask_path}")
             except Exception as e:
@@ -245,10 +319,9 @@ if __name__ == "__main__":
     inverse_masks_in_folder(folder_path)
 \end{lstlisting}
 
-%\cleardoublepage{}
-\bigskip
+\cleardoublepage{}
 
-\begin{lstlisting}[style=pythonstyle, label=lst:5, caption=Python script \texttt{resize.py} designed to alter an image's size with respect to a specified resize factor.]
+\begin{lstlisting}[style=pythonstyle, label=lst:6, caption=Python script \texttt{resize.py} designed to alter an image's size with respect to a specified resize factor.]
 """
 Author:      Jeremy Chaverot
 Date:        January 01, 2024
@@ -267,18 +340,15 @@ def resize_images(folder_path, resize_factor):
         if filename.endswith(".png") and not filename.startswith('._'):
             img_path = os.path.join(folder_path, filename)
             with Image.open(img_path) as img:
-                # Calculate new size
-                new_size = tuple([int(dim / resize_factor) for dim in img.size])
-                # Resize the image
+                new_size = tuple([int(dim * resize_factor) for dim in img.size])
                 resized_img = img.resize(new_size, Image.ANTIALIAS)
-                # Save the resized image with a different name temporarily
                 temp_path = os.path.join(folder_path, "temp_" + filename)
                 resized_img.save(temp_path)
 
             # Delete the original image
             os.remove(img_path)
 
-            # Rename the resized image to the original filename
+            # Rename the resized image
             os.rename(temp_path, img_path)
 
 
@@ -297,7 +367,7 @@ if __name__ == "__main__":
 
 %\cleardoublepage{}
 
-%\begin{lstlisting}[language=Python, label=lst:6, caption=Python script \texttt{.py}.]
+%\begin{lstlisting}[style=pythonstyle, label=lst:6, caption=Python script \texttt{.py}.]
 
 %\end{lstlisting}
 
