@@ -1,8 +1,9 @@
 \chapter{Scitas Izar Setup Tutorial}\label{chapter:scitas}
 \fancyhead[C]{\small\textsc{B. Scitas Izar Setup Tutorial}}
 
-This tutorial aims to set up the Scitas Izar environment step by step in order to run Gen6D.
+This tutorial aspires to guide you step by step in setting up the Scitas Izar environment to run Gen6D.
 
+\bigskip
 \bigskip
 
 \noindent Step 1: Request permission via email to use the Scitas servers. Unfortunately, I can't provide more details, as I had the privilege of attending an EPFL course that automatically granted me access.
@@ -39,7 +40,7 @@ rsync -azP <your/path/to/Gen6D> <username>@izar.epfl.ch:~/
 \bigskip
 
 
-\noindent Step 6: Install all the necessary libraries for Gen6D to function, listed in the \texttt{requirements.txt} file, except for openmpi, py-torch, py-torchvision, and cuda.
+\noindent Step 6: Install all the necessary libraries for Gen6D to run, listed in the \texttt{requirements.txt} file, except for openmpi, py-torch, py-torchvision, and cuda.
 
 \bigskip
 
@@ -53,7 +54,7 @@ rsync -azP <your/path/to/Gen6D> <username>@izar.epfl.ch:~/
 #SBATCH --chdir /scratch/izar/<username>
 #SBATCH --partition=gpu
 #SBATCH --qos=gpu_free
-#SBATCH --gres=gpu:2
+#SBATCH --gres=gpu:1
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
@@ -89,24 +90,19 @@ sbatch execute.sh
 
 \vspace{-0.4cm}
 
-\noindent Step 9: Find the pose estimation results in folder \texttt{~/Gen6D/data}. You can get them back on your computer using the commands:
+\noindent Step 9: Find the pose estimation results in folder \texttt{/Gen6D/data}. You can get them back on your computer using the commands:
 { \captionsetup{labelformat=empty,labelsep=none}
 \begin{lstlisting}[style=bashstyle, caption=\null, keywordstyle=\color{black}]
-rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/performance.log <folder/on/your/computer>
-rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/eval <folder/on/your/computer>
-rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/vis_inter <folder/on/your/computer>
-rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/vis_final <folder/on/your/computer>
+rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/performance.log <your/folder>
+rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/eval <your/folder>
+rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/vis_inter <your/folder>
+rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/vis_final <your/folder>
 \end{lstlisting}
 }
-\bigskip
-
 
 \bigskip
 
-
-\paragraph{Pro Tip} 
-\bigskip
-\noindent Once the job submitted, you'll have access to the console log in the folder \texttt{scratch/izar/<username>}. Once on Scitas Izar, to go there, do the following command:
+\paragraph{Pro Tip} Once the job submitted, you'll have access to the console log in the folder \texttt{scratch/izar/<username>}. Once on Scitas Izar, to go there, do the following command:
 { \captionsetup{labelformat=empty,labelsep=none}
 \begin{lstlisting}[style=bashstyle, caption=\null]
 cd && cd /scratch/izar/<username>
@@ -120,9 +116,6 @@ cd && cd /scratch/izar/<username>
 \bigskip
 
 \noindent I will keep the \texttt{README.md} file in the repository \url{https://github.com/JCHAVEROT/Gen6D/} updated to provide more information if necessary. Additionally, you'll find a compressed `zip` file that includes well-organized \textsc{SpaceCraft} images, allowing you to promptly test your setup and providing a template folder for your convenience.
-
-
-
 
 
 \cleardoublepage{}

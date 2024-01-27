@@ -51,7 +51,7 @@ Despite the benefits of quaternions mentioned earlier, other datasets frequently
 
 \bigbreak 
 
-Quaternions were first introduced by the Irish mathematician W. R. Hamilton in 1843 as an extension of the complex numbers \cite{Hamilton1866}. In the first place, we provide the definition of a \textit{quaternion}: it is the sum of a scalar $\mathrm{q}_0$ and a vector $\bm{\mathrm{q}}=(\mathrm{q}_1, \mathrm{q}_2, \mathrm{q}_3)$, that is,
+Quaternions were first introduced by the Irish mathematician W. R. Hamilton in 1843 as an extension of the complex numbers \cite{Hamilton1866}. In the first place, we provide the definition of a \textit{quaternion} $\underline{\bm{\mathrm{q}}}$: it is the sum of a scalar $\mathrm{q}_0$ and a vector $\bm{\mathrm{q}}=(\mathrm{q}_1, \mathrm{q}_2, \mathrm{q}_3)$, that is,
 \begin{center}
 	$\underline{\bm{\mathrm{q}}} \stackrel{\text{def.}}{=} \mathrm{q}_0 + \bm{\mathrm{q}} = \mathrm{q}_0 + \mathrm{q}_1\bm{i} + \mathrm{q}_2\bm{j} + \mathrm{q}_3\bm{k}$.
 \end{center}
@@ -144,7 +144,7 @@ on $\bm{\mathrm{v}}$ is equivalent to a rotation of the vector through an angle 
 \right.
 \end{align*}
 
-which means we wish to obtain an expression for $\bm{\mathrm{R}}$ by manipulating $L_{\underline{\bm{\mathrm{q}}}}\,$, utilizing principles of linear algebra and vector calculus. We consider the vector $\bm{\mathrm{v}}$ as a quaternion with a zero scalar component:
+\noindent which means we wish to obtain an expression for $\bm{\mathrm{R}}$ by manipulating $L_{\underline{\bm{\mathrm{q}}}}\,$, utilizing principles of linear algebra and vector calculus. We consider the vector $\bm{\mathrm{v}}$ as a quaternion with a zero scalar component:
 
 
 \begin{align*}
@@ -207,30 +207,32 @@ which means we wish to obtain an expression for $\bm{\mathrm{R}}$ by manipulatin
 \noindent This completes our derivation of the rotation matrix $\bm{\mathrm{R}}$. The Python code can be found in Listing~\ref{lst:4}.
 
 \section{Inverted Masks}
-\fancyhead[C]{\small\textsc{3.2. From Quaternions to Rotation Matrices}}
+
 During the initial testing of Gen6D on the \textsc{SpaceCraft} dataset, we noticed that the estimated poses were particularly inaccurate. Upon investigation, we discovered that in the reference images folder, the masks were incorrectly inverted: typically, one expects a white object on a black background, but it was the opposite (see Figure~\ref{fig:mask1} below).
+
+After discussing this, we realized that this was actually an error in the current version of the dataset. Therefore, we needed to correct the masks we were using through a Python script utilizing the OpenCV library. The Python script can be found in Listing~\ref{lst:5}.
+
 \fancyhead[C]{\small\textsc{3.3. Inverted Masks}}
-After discussing this, we realized that this was actually an error in the current version of the dataset. Therefore, we needed to correct the masks we were using through a Python script utilizing the OpenCV library. 
-\fancyhead[C]{\small\textsc{3.3. Inverted Masks}}
+
+\bigskip
+
 \begin{figure}[h]
     \centering
     \begin{minipage}{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{data/mask1.png} % First image
-        \caption{James Webb Space Telescope, mask before correction.}
+        \caption{James Webb Space Telescope, mask before the correction.}
         \label{fig:mask1}
     \end{minipage}\hfill
     \begin{minipage}{0.45\linewidth}
         \centering
         \includegraphics[width=\linewidth]{data/mask2.png} % Second image
-        \caption{James Webb Space Telescope, mask after correction using a script.}
+        \caption{James Webb Space Telescope, mask after the correction using a script.}
         \label{fig:mask2}
     \end{minipage}
 \end{figure}
-\fancyhead[C]{\small\textsc{3.3. Inverted Masks}}
-\bigskip
 
-\noindent The Python script can be found in Listing~\ref{lst:5}.
+\bigskip
 
 \section{Resized Query Images}
 
@@ -240,18 +242,24 @@ During the initial testing of Gen6D, it became apparent that the deep learning m
 
 Therefore, to improve the detector's results, resizing the query images is necessary. This is accomplished using a Python script that can be found in Listing~\ref{lst:6}. It's important to note that this adjustment also requires modifying the camera intrinsic matrix $\bm{\mathcal{K}}$ in the data loader, which converts points from the camera coordinate system to the pixel coordinate system.
 
-\begin{figure}[h]
+\pagebreak
+
+\fancyhead[C]{\small\textsc{3.4. Resized Query Images}}
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.70\linewidth]{data/fig2.jpg} % First image
+    \includegraphics[width=0.70\linewidth]{data/fig2.jpg}
     \caption{Hubble Space Telescope with earth rendered background, 1024x1024 query image number 1, poor pose estimation (blue 3D bounding box) when the object inside the query image is too big.}
     \label{fig:fig2}
 \end{figure}
 
-\begin{figure}[h]
+\bigskip
+\bigskip
+\bigskip
+
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.70\linewidth]{data/fig1.jpg} % Second image
+    \includegraphics[width=0.70\linewidth]{data/fig1.jpg}
     \caption{Hubble Space Telescope with earth rendered background, 1024x1024 query image number 2, poor pose estimation (blue 3D bounding box) when the object inside the query image is too big.}
     \label{fig:fig1}
 \end{figure}
-
-\fancyhead[C]{\small\textsc{3.4. Resized Query Images}}

@@ -84,101 +84,6 @@ class SpaceCraftCVLabDatabase(BaseDatabase):
 
 \cleardoublepage{}
 
-\begin{lstlisting}[style=pythonstyle, label=lst:2, caption=Python script \texttt{format.py} to randomly generate the training set and the test set based on a specified probability. This script is used when creating both the reference set and the query set from a common set of images. Should be run from Gen6D's root folder.]
-"""
-Author:      Jeremy Chaverot
-Date:        November 29, 2023
-Description: Create the files val.txt, train.txt and test.txt according to a test percentage.
-"""
-
-import os
-import sys
-import random
-
-
-if __name__ == "__main__":
-
-	# Check if the correct number of arguments is provided
-    if len(sys.argv) != 3:
-        print("Usage: python format.py <object_name> <test_percentage>")
-        sys.exit(1)
-
-    object = sys.argv[1]
-    test_percentage = float(sys.argv[2])
-
-    if (test_percentage < 0 or 1 < test_percentage):
-        print("Wrong value for the variable <test_percentage>. Should be between 0 and 1 included.")
-        sys.exit(1)
-
-    # List of files in the given folder
-    all_files = os.listdir(f'data/SpaceCraft/{object}/images')
-
-    # Filter the list to select only images and exclude MacOS temporary files
-    image_files = [file for file in all_files if file.lower().endswith(('.jpg')) and not file.startswith('._')]
-
-    num_images = len(image_files)
-
-    # Transform each image
-    with open(f'data/SpaceCraft/{object}/train.txt', 'w') as train, open(f'data/SpaceCraft/{object}/test.txt', 'w') as test:
-        for image_file in image_files:
-            rand = random.random()
-            image_path = 'SpaceCraft/hubble/images/' + image_file
-            if (rand < test_percentage):
-                test.write(image_path + '\n')
-            else: train.write(image_path + '\n')
-
-    print(f"Done splitting {num_images} images in train.txt and test.txt")
-\end{lstlisting}
-
-\cleardoublepage{}
-
-\begin{lstlisting}[style=pythonstyle, label=lst:3, caption=Python script \texttt{to\_jpg.py} to transform every images of a specified folder into \texttt{jpg} format.]
-"""
-Author:      Jeremy Chaverot
-Date:        November 20, 2023
-Description: Transform every images of a folder into jpg format.
-"""
-
-import os
-import sys
-from PIL import Image
-
-
-def transform_image(image_path):
-    img = Image.open(image_path)
-    new_image_path = image_path.split('.')[0] + '.jpg'
-    img.save(new_image_path)
-
-
-if __name__ == "__main__":
-
-	# Check if the correct number of arguments is provided
-    if len(sys.argv) != 2:
-        print("Usage: python to_jpg.py </path/to/your/images>")
-        sys.exit(1)
-
-    folder_path = sys.argv[1]
-
-    # List of files in the given folder
-    all_files = os.listdir(folder_path)
-    
-    # Filter the list to select only images and exclude MacOS temporary files
-    image_files = [file for file in all_files if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')) and not file.startswith('._')]
-    
-    num_images = len(image_files)
-
-    # Transform each image
-    for image_file in image_files:
-        image_path = os.path.join(folder_path, image_file)
-        transform_image(image_path)
-        os.remove(image_path)
-
-    print(f"Number of images transformed into .jpg: {num_images}")
-\end{lstlisting}
-
-
-\cleardoublepage{}
-
 \begin{lstlisting}[style=pythonstyle, label=lst:4, caption=Python script \texttt{quaternion\_to\_matrix.py} to transform a txt file with quaternions and the translation vector into multiple npy files containing the rotation matrix augmented with the translation vector.]
 """
 Author:      Jeremy Chaverot
@@ -270,7 +175,7 @@ if __name__ == "__main__":
 
 \cleardoublepage{}
 
-\begin{lstlisting}[style=pythonstyle, label=lst:5, caption=Python script \texttt{invert\_mask.py} to invert the masks from a specified folder. We aim to have a black object set against a white background.]
+\begin{lstlisting}[style=pythonstyle, label=lst:5, caption=Python script \texttt{invert\_mask.py} to invert the masks from a specified folder. We aim to have a white object set against a black background.]
 """
 Author:      Jeremy Chaverot
 Date:        December 10, 2023
@@ -365,10 +270,104 @@ if __name__ == "__main__":
     resize_images(folder_path, factor)
 \end{lstlisting}
 
-%\cleardoublepage{}
+\cleardoublepage{}
+
+\begin{lstlisting}[style=pythonstyle, label=lst:3, caption=Python script \texttt{to\_jpg.py} to transform every images of a specified folder into \texttt{jpg} format.]
+"""
+Author:      Jeremy Chaverot
+Date:        November 20, 2023
+Description: Transform every images of a folder into jpg format.
+"""
+
+import os
+import sys
+from PIL import Image
+
+
+def transform_image(image_path):
+    img = Image.open(image_path)
+    new_image_path = image_path.split('.')[0] + '.jpg'
+    img.save(new_image_path)
+
+
+if __name__ == "__main__":
+
+	# Check if the correct number of arguments is provided
+    if len(sys.argv) != 2:
+        print("Usage: python to_jpg.py </path/to/your/images>")
+        sys.exit(1)
+
+    folder_path = sys.argv[1]
+
+    # List of files in the given folder
+    all_files = os.listdir(folder_path)
+    
+    # Filter the list to select only images and exclude MacOS temporary files
+    image_files = [file for file in all_files if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')) and not file.startswith('._')]
+    
+    num_images = len(image_files)
+
+    # Transform each image
+    for image_file in image_files:
+        image_path = os.path.join(folder_path, image_file)
+        transform_image(image_path)
+        os.remove(image_path)
+
+    print(f"Number of images transformed into .jpg: {num_images}")
+\end{lstlisting}
+
+\cleardoublepage{}
+
+\begin{lstlisting}[style=pythonstyle, label=lst:2, caption=Python script \texttt{format.py} to randomly generate the training set and the test set based on a specified probability. This script is used when creating both the reference set and the query set from a common set of images. Should be run from Gen6D's root folder.]
+"""
+Author:      Jeremy Chaverot
+Date:        November 29, 2023
+Description: Create the files val.txt, train.txt and test.txt according to a test percentage.
+"""
+
+import os
+import sys
+import random
+
+
+if __name__ == "__main__":
+
+	# Check if the correct number of arguments is provided
+    if len(sys.argv) != 3:
+        print("Usage: python format.py <object_name> <test_percentage>")
+        sys.exit(1)
+
+    object = sys.argv[1]
+    test_percentage = float(sys.argv[2])
+
+    if (test_percentage < 0 or 1 < test_percentage):
+        print("Wrong value for the variable <test_percentage>. Should be between 0 and 1 included.")
+        sys.exit(1)
+
+    # List of files in the given folder
+    all_files = os.listdir(f'data/SpaceCraft/{object}/images')
+
+    # Filter the list to select only images and exclude MacOS temporary files
+    image_files = [file for file in all_files if file.lower().endswith(('.jpg')) and not file.startswith('._')]
+
+    num_images = len(image_files)
+
+    # Transform each image
+    with open(f'data/SpaceCraft/{object}/train.txt', 'w') as train, open(f'data/SpaceCraft/{object}/test.txt', 'w') as test:
+        for image_file in image_files:
+            rand = random.random()
+            image_path = 'SpaceCraft/hubble/images/' + image_file
+            if (rand < test_percentage):
+                test.write(image_path + '\n')
+            else: train.write(image_path + '\n')
+
+    print(f"Done splitting {num_images} images in train.txt and test.txt")
+\end{lstlisting}
+
+\cleardoublepage{}
 
 %\begin{lstlisting}[style=pythonstyle, label=lst:6, caption=Python script \texttt{.py}.]
 
 %\end{lstlisting}
 
-\cleardoublepage{}
+%\cleardoublepage{}

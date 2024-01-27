@@ -9,6 +9,7 @@
 \usepackage[autostyle]{csquotes}
 \usepackage{fancyhdr}
 \usepackage{cancel}
+\usepackage{float}
 \usepackage{stackengine}
 \def\delequal{\mathrel{\ensurestackMath{\stackon[1pt]{=}{\scriptscriptstyle\Delta}}}}
 \usepackage[
@@ -49,8 +50,7 @@
 \usepackage{color} % For syntax highlighting
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codeblue}{rgb}{0.054,0.432,0.817}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{codeblue}{rgb}{0.118,0.352,0.740}
 \definecolor{backcolour}{rgb}{0.901,0.901,0.901}
 \newcommand{\verytiny}{\fontsize{5pt}{6pt}\selectfont}
 
@@ -88,6 +88,47 @@
         breaklines=true,
         frame=single
 }
+
+% LISTINGS FOR DARK PDF BUILD
+%\definecolor{backcolour}{rgb}{0,0,0} 
+%\definecolor{codegreen}{rgb}{0,0.7,0}  
+%\definecolor{codeblue}{rgb}{0,0.743,1}     
+%\definecolor{gray}{rgb}{0.5,0.5,0.5}  
+%
+%\lstdefinestyle{pythonstyle}{
+%	language=python,
+%	rulecolor=\color{white},
+%    backgroundcolor=\color{backcolour},   
+%    commentstyle=\color{codegreen},
+%    keywordstyle=\color{codeblue},
+%    numberstyle=\tiny\color{codeblue},
+%    stringstyle=\color{magenta},
+%    basicstyle=\color{white}\footnotesize\ttfamily, % White text
+%    breakatwhitespace=false,         
+%    breaklines=true,                 
+%    captionpos=b,                    
+%    keepspaces=true,                 
+%    numbers=left,                    
+%    numbersep=5pt,                  
+%    showspaces=false,                
+%    showstringspaces=false,
+%    showtabs=false,                  
+%    tabsize=2,
+%    frame=single
+%}
+%
+%\lstdefinestyle{bashstyle}{
+%	language=bash,
+%	rulecolor=\color{white},
+%	backgroundcolor=\color{backcolour},
+%    basicstyle=\color{white}\footnotesize\ttfamily, % White text
+%    keywordstyle=\color{codeblue},
+%    commentstyle=\color{gray},
+%    stringstyle=\color{magenta},
+%    showstringspaces=false,
+%    breaklines=true,
+%    frame=single
+%}
 
 \lstset{style=pythonstyle}
 \renewcommand{\lstlistingname}{\small Listing}
