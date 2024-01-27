@@ -8,7 +8,7 @@ Advisors: Chen Zhao & Andrew Price
 
 Dates: 19.09.2023 to 26.01.2024
 
-![spacecraft2](https://github.com/JCHAVEROT/bachelor-thesis/assets/100281310/65449f7a-c41b-474b-b5a7-003b95938119)
+![spacecraft2](https://github.com/JCHAVEROT/bachelor-thesis/assets/100281310/65449f7a-c41b-474b-b5a7-003b95938119 =400x400)
 
 
 ### Compiling
