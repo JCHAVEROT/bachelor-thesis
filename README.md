@@ -2,7 +2,7 @@
 
 ## *Baseline solution implementation of a deep learning model for unseen spacecraft pose estimation*
 
-I am currently doing my bachelor thesis at EPF Lausanne in Switzerland under the supervision of Dr. Mathieu Salzmann.
+I did my bachelor thesis at EPF Lausanne in Switzerland under the supervision of Dr. Mathieu Salzmann.
 
 Advisors: Chen Zhao & Andrew Price
 
