@@ -17,3 +17,6 @@
 - What is the format of the pose ? Answer : Our format is the quaternions and the 3 coordinates. Theirs the rotation matrix concatenated with the translation vector.
 
 
+Response:
+K matrix: intrinsic matrix
+Pose matrix: Rotational matrix and translation vector combined

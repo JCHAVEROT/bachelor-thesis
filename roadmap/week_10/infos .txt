@@ -1,2 +1,0 @@
-K matrix: intrinsic matrix
-Pose matrix: Rotational matrix and translation vector combined
