@@ -56,6 +56,8 @@ In the detection phase, the initial step involves resizing both reference and qu
 
 Following this, the feature maps from the reference images are utilized as convolutional kernels to convolve with one of the query images, resulting in the generation of a score map. Leveraging the multi-scale score map, we perform regression to obtain a heat map and a scale map. The final 2D detection is acquired by identifying the maximum value in the heat map, which provides the object's center coordinates, while the scale $s$ is obtained from the same location in the scale map, by this way determining the size of the 2D bounding box.
 
+\bigskip
+
 %\cleardoublepage{}
 
 \section{Viewpoint Selection}
@@ -75,8 +77,9 @@ Next we calculate the element-wise product of the query image's features with th
 
 It's worth highlighting that within the similarity network, the authors have implemented global normalization and incorporated a transformer to facilitate information sharing among the reference images.
 
-\fancyhead[C]{\small\textsc{2.3. Viewpoint Selection}}
+\bigskip
 
+\fancyhead[C]{\small\textsc{2.3. Viewpoint Selection}}
 
 \section{Pose Refinement}
 

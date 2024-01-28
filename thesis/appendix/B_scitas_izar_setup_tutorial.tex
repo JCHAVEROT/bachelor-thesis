@@ -11,41 +11,50 @@ This tutorial aspires to guide you step by step in setting up the Scitas Izar en
 \bigskip
 
 
-\noindent Step 2: Download the following GitHub repository: \\ \url{https://github.com/JCHAVEROT/Gen6D/}
-
-\bigskip
-
-
-\noindent Step 3: Follow the instructions provided by the authors of Gen6D to set up the model (specifically, download the Gen6D pretrained model and place it in the correct location).
-
-\bigskip
-
-
-\noindent Step 3: Ensure you're on the EPFL internet network in person or connect to the EPFL VPN.
-
-\bigskip
-
-
-\noindent Step 4: Transfer the Gen6D files to your Scitas Izar session using on your computer the command:
+\noindent Step 2: Download the following GitHub repository: \\ \url{https://github.com/JCHAVEROT/Gen6D/}. You can clone it using this command:
 { \captionsetup{labelformat=empty,labelsep=none}
 \begin{lstlisting}[style=bashstyle, caption=\null]
-rsync -azP <your/path/to/Gen6D> <username>@izar.epfl.ch:~/
+	git clone git@github.com:JCHAVEROT/Gen6D.git
 \end{lstlisting}
 }
 
 \vspace{-0.4cm}
 
-\noindent Step 5: Create a virtual environment on your Scitas Izar Session using the instructions at: \url{https://scitas-doc.epfl.ch/user-guide/software/python/python-venv/}  and activate it.
+\noindent Step 3: Follow the instructions provided by the authors of Gen6D in the \texttt{README.md} file from \url{https://github.com/liuyuan-pal/Gen6D} to set up the model (specifically, download the Gen6D pretrained model and place it in the \texttt{Gen6D/data} folder).
 
 \bigskip
 
 
-\noindent Step 6: Install all the necessary libraries for Gen6D to run, listed in the \texttt{requirements.txt} file, except for openmpi, py-torch, py-torchvision, and cuda.
+\noindent Step 4: Ensure you're on the EPFL internet directly or connect to the EPFL VPN.
 
 \bigskip
 
 
-\noindent Step 7: Compose your execute.sh file, in which you put the commands you want to run (use the provided template, do not modify the modules load). Notice that you need to replace the \texttt{<username>} section with yours.
+\noindent Step 5: Transfer the Gen6D files to your Scitas Izar session executing on your computer the command:
+{ \captionsetup{labelformat=empty,labelsep=none}
+\begin{lstlisting}[style=bashstyle, caption=\null]
+	rsync -azP <your/path/to/Gen6D> <username>@izar.epfl.ch:~/
+\end{lstlisting}
+}
+
+\vspace{-0.4cm}
+
+\noindent Step 6: Create a virtual environment on your Scitas Izar Session using the instructions at \url{https://scitas-doc.epfl.ch/user-guide/software/python/python-venv/} and activate it.
+
+\bigskip
+
+
+\noindent Step 7: Install all the necessary libraries for Gen6D to run, listed in the \texttt{requirements.txt} file, except for openmpi, py-torch, py-torchvision, and cuda.
+
+\bigskip
+
+
+\noindent Step 8: You can find a compressed `zip` file containing \textsc{Linemod} images for the duck object, and also well-organized Spacecraft dataset images as a template for testing purposes on \url{https://go.epfl.ch/Gen6D_data}. Put what's inside into the \texttt{Gen6D/data} folder.
+
+\bigskip
+
+
+\noindent Step 9: Compose your execute.sh file, in which you put the commands you want to run (use the provided template, do not modify the modules load). Notice that you need to replace the \texttt{<username>} section with yours.
 
 \bigskip
 
@@ -69,7 +78,8 @@ echo "Launching the virtual environment"
 source ~/opt/izar1/venv-gcc/bin/activate
 
 echo "Navigating to the directory and executing the task"
-cd ~/Gen6D                                    
+cd ~/Gen6D
+python eval.py --cfg configs/gen6d_pretrain.yaml --object_name linemod/duck --symmetric                                    
 python eval.py --cfg configs/gen6d_pretrain.yaml --object_name spacecraft/hubble --symmetric
 python eval.py --cfg configs/gen6d_pretrain.yaml --object_name spacecraft/jwst --symmetric
 python eval.py --cfg configs/gen6d_pretrain.yaml --object_name spacecraft/cosmos --symmetric
@@ -81,7 +91,7 @@ echo FINISHED AT `date`
 \bigskip
 
 
-\noindent Step 8: Use the following command to submit the job:
+\noindent Step 10: Use the following command to submit the job:
 { \captionsetup{labelformat=empty,labelsep=none}
 \begin{lstlisting}[style=bashstyle, caption=\null]
 sbatch execute.sh
@@ -90,7 +100,7 @@ sbatch execute.sh
 
 \vspace{-0.4cm}
 
-\noindent Step 9: Find the pose estimation results in folder \texttt{/Gen6D/data}. You can get them back on your computer using the commands:
+\noindent Step 11: Find the pose estimation results in the \texttt{Gen6D/data} folder. You can get them back on your computer using the commands:
 { \captionsetup{labelformat=empty,labelsep=none}
 \begin{lstlisting}[style=bashstyle, caption=\null, keywordstyle=\color{black}]
 rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/performance.log <your/folder>
@@ -99,8 +109,17 @@ rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/vis_inter <your/folder>
 rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/vis_final <your/folder>
 \end{lstlisting}
 }
+% FOR DARK MODE
+%{ \captionsetup{labelformat=empty,labelsep=none}
+%\begin{lstlisting}[style=bashstyle, caption=\null, keywordstyle=\color{white}]
+%rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/performance.log <your/folder>
+%rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/eval <your/folder>
+%rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/vis_inter <your/folder>
+%rsync -azP <username>@izar.epfl.ch:~/Gen6D/data/vis_final <your/folder>
+%\end{lstlisting}
+%}
 
-\bigskip
+\vspace{-0.4cm}
 
 \paragraph{Pro Tip} Once the job submitted, you'll have access to the console log in the folder \texttt{scratch/izar/<username>}. Once on Scitas Izar, to go there, do the following command:
 { \captionsetup{labelformat=empty,labelsep=none}
@@ -115,7 +134,7 @@ cd && cd /scratch/izar/<username>
 
 \bigskip
 
-\noindent I will keep the \texttt{README.md} file in the repository \url{https://github.com/JCHAVEROT/Gen6D/} updated to provide more information if necessary. Additionally, you'll find a compressed `zip` file that includes well-organized \textsc{SpaceCraft} images, allowing you to promptly test your setup and providing a template folder for your convenience.
+\noindent I will keep the \texttt{README.md} file in the repository \url{https://github.com/JCHAVEROT/Gen6D/} updated to provide more information if necessary. Additionally, you'll find a compressed `zip` file that includes well-organized \textsc{Spacecraft} images, allowing you to promptly test your setup and providing a template folder for your convenience.
 
 
 \cleardoublepage{}

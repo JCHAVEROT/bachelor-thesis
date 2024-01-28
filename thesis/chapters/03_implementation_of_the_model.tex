@@ -5,7 +5,7 @@
 
 \section{Data Loader}
 
-Now that we have a better understanding of how Gen6D operates, we're interested in testing it with the synthetic images from the \textsc{SpaceCraft} dataset. To accomplish this, we need to redefine the Data Loader to supply the model with the necessary data in the required format. In the file \texttt{database.py}, located in the \texttt{Gen6D/dataset} directory, there is an \ac{ABC} named \texttt{BaseDatabase()} containing all the essential methods, as shown in the code below:
+Now that we have a better understanding of how Gen6D operates, we're interested in testing it with the synthetic images from the \textsc{Spacecraft} dataset. To accomplish this, we need to redefine the \textit{data loader} to supply the model with the necessary data in the required format. In the file \texttt{database.py}, located in the \texttt{Gen6D/dataset} directory, there is an \ac{ABC} named \texttt{BaseDatabase()} containing all the essential methods, as shown in the code below:
 
 \bigbreak
 
@@ -39,13 +39,13 @@ Now that we have a better understanding of how Gen6D operates, we're interested 
 
 \bigbreak
 
-Our goal, therefore, is to write a new class that inherits from the \ac{ABC} \\\texttt{BaseDatabase()}, and implement each abstract method in the same manner as it was done for the \textsc{Linemod} and \textsc{GenMOP} datasets, for example. We will also adapt the code in various places, especially in the \texttt{eval.py} file, to ensure compatibility with the \textsc{SpaceCraft} dataset. The Python code for the new data loading class \texttt{SpaceCraftCVLabDatabase()} can be found in Listing~\ref{lst:1}.
+Our goal, therefore, is to write a new class that inherits from the \ac{ABC} \\\texttt{BaseDatabase()}, and implement each abstract method in the same manner as it was done for example with the \textsc{Linemod} and \textsc{GenMOP} datasets. We will also adapt the code in various places, especially in the \texttt{eval.py} file, to ensure compatibility with the \textsc{Spacecraft} dataset. The Python code for the new data loading class \texttt{SpaceCraftCVLabDatabase()} can be found in Listing~\ref{lst:1}.
 
 \section{From Quaternions to Rotation Matrices}
 \fancyhead[C]{\small\textsc{3.2. From Quaternions to Rotation Matrices}}
 
 In Gen6D, the model represents the ground truth and estimated poses using the format ${\bm{\mathrm{P}}}=(\bm{\mathrm{R}},\,\bm{\mathrm{t}})$. Here, $\bm{\mathrm{R}}$ denotes the rotation matrix and $\bm{\mathrm{t}}$ is the translation vector.
-The thing is, in the \textsc{SpaceCraft} dataset, the poses have the format ${\bm{\mathrm{P}}}=(\underline{\bm{\mathrm{q}}},\,\bm{\mathrm{t}})$, where $\underline{\bm{\mathrm{q}}}$ is a \textit{quaternion}. We use quaternions for three-dimensional rotation calculations because they offer several benefits over rotation matrices. Notably, quaternions are more compact, requiring only four elements to be stored compared to nine for a matrix. Additionally, they are more efficient when composing rotations thanks to their algebraic properties.
+The thing is, in the \textsc{Spacecraft} dataset, the poses have the format ${\bm{\mathrm{P}}}=(\underline{\bm{\mathrm{q}}},\,\bm{\mathrm{t}})$, where $\underline{\bm{\mathrm{q}}}$ is a \textit{quaternion}. We use quaternions for three-dimensional rotation calculations because they offer several benefits over rotation matrices. Notably, quaternions are more compact, requiring only four elements to be stored compared to nine for a matrix. Additionally, they are more efficient when composing rotations thanks to their algebraic properties.
 
 Despite the benefits of quaternions mentioned earlier, other datasets frequently represent poses using a combination of rotation matrices and translation vectors. Therefore, to align with Gen6D's pose format, this section will focus on converting quaternions into rotation matrices \cite{jia2022quaternions}.
 
@@ -153,7 +153,10 @@ on $\bm{\mathrm{v}}$ is equivalent to a rotation of the vector through an angle 
 
 \setlength{\belowdisplayskip}{0.3cm}
 
-\bigskip At last, we can proceed with our conversion task: our aim is to find a $3\times3$ rotation matrix $\bm{\mathrm{R}}$, such that
+\bigskip
+\bigskip 
+
+At last, we can proceed with our conversion task: our aim is to find a $3\times3$ rotation matrix $\bm{\mathrm{R}}$, such that
 \begin{align*}
 \left\{
     \begin{aligned}
@@ -164,7 +167,6 @@ on $\bm{\mathrm{v}}$ is equivalent to a rotation of the vector through an angle 
 \end{align*}
 
 \noindent which means we wish to obtain an expression for $\bm{\mathrm{R}}$ by manipulating $L_{\underline{\bm{\mathrm{q}}}}\,$, utilizing principles of linear algebra and vector calculus. We consider the vector $\bm{\mathrm{v}}$ as a quaternion with a zero scalar component:
-
 
 \begin{align*}
     L_{\underline{\bm{\mathrm{q}}}}(\bm{\mathrm{v}}) &= \underline{\bm{\mathrm{q}}}\bm{\mathrm{v}}\underline{\bm{\mathrm{q}}}^\star \\
@@ -178,6 +180,8 @@ on $\bm{\mathrm{v}}$ is equivalent to a rotation of the vector through an angle 
     &= \bm{\mathrm{q}}\,(\bm{\mathrm{q}}^\intercal\bm{\mathrm{v}}) + {\mathrm{q}_0}^2\,\bm{\mathrm{v}} + \mathrm{q}_0(\bm{\mathrm{q}}\times\bm{\mathrm{v}}) + \bm{\mathrm{q}}\times(\mathrm{q}_0\bm{\mathrm{v}}+\bm{\mathrm{q}}\times\bm{\mathrm{v}}) \\
     &= (\bm{\mathrm{q}}\otimes\bm{\mathrm{q}} + {\mathrm{q}_0}^2\,\bm{\mathrm{I}}_{3\times3} + 2\,\mathrm{q}_0\,[\bm{\mathrm{q}}]_{_{_\times}}\!\! + [\bm{\mathrm{q}}]_{_{_\times}}^2)\,\,\bm{\mathrm{v}}
 \end{align*}
+
+\bigskip
 
 \noindent In the above, $\otimes$ stands for the \textit{outer product} and $\bm{\mathrm{I}}_{3\times3}$ is the \textit{identity matrix}. 
 
@@ -227,7 +231,7 @@ on $\bm{\mathrm{v}}$ is equivalent to a rotation of the vector through an angle 
 
 \section{Inverted Masks}
 
-During the initial testing of Gen6D on the \textsc{SpaceCraft} dataset, we noticed that the estimated poses were particularly inaccurate. Upon investigation, we discovered that in the reference images folder, the masks were incorrectly inverted: typically, one expects a white object on a black background, but it was the opposite (see Figure~\ref{fig:mask1} below).
+During the initial testing of Gen6D on the \textsc{Spacecraft} dataset, we noticed that the estimated poses were particularly inaccurate. Upon investigation, we discovered that in the reference images folder, the masks were incorrectly inverted: typically, one expects a white object on a black background, but it was the opposite (see Figure~\ref{fig:mask1} below).
 
 After discussing this, we realized that this was actually an error in the current version of the dataset. Therefore, we needed to correct the masks we were using through a Python script utilizing the OpenCV library. The Python script can be found in Listing~\ref{lst:5}.
 
