@@ -1,10 +1,10 @@
-# Bachelor thesis: CVLab Unseen Spacecraft Pose Estimation
+# Bachelor's thesis: CVLab Unseen Spacecraft Pose Estimation
 
 ## *Baseline solution implementation of a deep learning model for unseen spacecraft pose estimation*
 
-I did my bachelor thesis at EPF Lausanne in Switzerland under the supervision of Dr. Mathieu Salzmann.
+I did my bachelor's thesis at EPFL in Switzerland under the supervision of Dr. Mathieu Salzmann.
 
-Advisors: Chen Zhao & Andrew Price
+Advisors: Andrew Price & Chen Zhao 
 
 Dates: 19.09.2023 to 26.01.2024
 
