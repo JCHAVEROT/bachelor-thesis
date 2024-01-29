@@ -4,7 +4,7 @@
 
 I did my bachelor's thesis at EPFL in Switzerland under the supervision of Dr. Mathieu Salzmann.
 
-Advisors: Andrew Price & Chen Zhao 
+Advisors: Dr. Andrew Price & PhD. Chen Zhao 
 
 Dates: 19.09.2023 to 26.01.2024
 
